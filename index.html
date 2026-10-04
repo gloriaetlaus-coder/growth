@@ -1586,6 +1586,7 @@
         var floatingSwitch = document.getElementById('floating-switch');
         var cloudMark = document.getElementById('cloud-mark');
         if (!floatingSwitch || !cloudMark) return;
+        cloudMark.style.fontSize = '24px';
         var dragState = null;
         var suppressSwitchClick = false;
         var coarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
@@ -1638,15 +1639,19 @@
             offsetY: event.clientY - rect.top,
             moved: false
           };
-          try { floatingSwitch.setPointerCapture(event.pointerId); } catch (error) {}
+          /* 注意：不要在这里 setPointerCapture，否则 click 会被重定向到容器、
+             底下的图标就点不到了；只在真正拖动起来后再捕获指针。 */
         });
         window.addEventListener('pointermove', function (event) {
           if (!dragState || event.pointerId !== dragState.id) return;
           var distance = Math.hypot(event.clientX - dragState.x, event.clientY - dragState.y);
           if (distance < 4 && !dragState.moved) return;
-          dragState.moved = true;
-          suppressSwitchClick = true;
-          floatingSwitch.classList.add('is-dragging');
+          if (!dragState.moved) {
+            dragState.moved = true;
+            suppressSwitchClick = true;
+            floatingSwitch.classList.add('is-dragging');
+            try { floatingSwitch.setPointerCapture(event.pointerId); } catch (error) {}
+          }
           var currentRect = floatingSwitch.getBoundingClientRect();
           var bounds = viewportBounds();
           var minLeft = bounds.left + 8;
