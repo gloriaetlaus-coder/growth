@@ -214,42 +214,6 @@
       filter: blur(22px);
       animation: low-mist 14s ease-in-out infinite alternate;
     }
-    .tree-glow {
-      position: absolute;
-      z-index: 8;
-      left: 50%;
-      top: 8.5%;
-      width: 48px;
-      height: 48px;
-      margin: -24px 0 0 -24px;
-      border: 0;
-      padding: 0;
-      border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(255,255,247,1) 0 7%, rgba(255,244,165,.96) 9% 17%, rgba(185,255,218,.55) 26%, transparent 68%);
-      box-shadow: 0 0 18px rgba(255,240,133,.78), 0 0 42px rgba(131,239,183,.55);
-      cursor: pointer;
-      animation: hidden-light 2.8s ease-in-out infinite;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .tree-glow::before,
-    .tree-glow::after {
-      content: "";
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      background: rgba(255,255,231,.88);
-      transform: translate(-50%, -50%);
-      box-shadow: 0 0 9px rgba(255,245,178,.95);
-    }
-    .tree-glow::before { width: 2px; height: 36px; }
-    .tree-glow::after { width: 36px; height: 2px; }
-    .tree-glow:focus-visible { outline: 2px solid rgba(87,144,108,.75); outline-offset: 5px; }
-    @keyframes hidden-light {
-      0%, 100% { opacity: .68; filter: brightness(.92); }
-      42% { opacity: 1; filter: brightness(1.32); }
-      66% { opacity: .86; filter: brightness(1.08); }
-    }
     .note-layer {
       position: fixed;
       z-index: 70;
@@ -463,7 +427,6 @@
       .tab { flex: none; min-width: 42px; }
       .tree-layout { min-height: calc(100vh - 74px); padding: 0; }
       .tree-stage { min-height: 600px; height: calc(100vh - 74px); }
-      .tree-glow { top: 15%; }
       .note-layer { padding: 14px; }
       .tree-note { width: min(96vw, 430px); min-height: 310px; padding: 48px 25px 30px; }
       .timeline-shell { margin-inline: 16px; padding-top: 24px; }
@@ -889,36 +852,44 @@
       background: none;
       filter: drop-shadow(0 12px 22px rgba(78, 145, 76, .08));
     }
-    .watercolor-ground { fill: url(#watercolor-bank-gradient); opacity: .64; filter: url(#grass-bleed); }
-    .watercolor-haze { fill: rgba(207, 238, 166, .48); filter: blur(17px); }
-    .watercolor-shadow { fill: rgba(77, 149, 87, .22); filter: blur(10px); }
-    .grass-wash {
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      filter: url(#grass-bleed);
-      transform-origin: 50% 100%;
-      animation: grass-wash-breathe 9.4s ease-in-out infinite;
+    .grass-underwash {
+      position: absolute;
+      left: 3%;
+      right: 4%;
+      bottom: 5%;
+      height: 68%;
+      border-radius: 39% 61% 46% 54% / 57% 44% 56% 43%;
+      background:
+        radial-gradient(ellipse at 28% 44%, rgba(222, 239, 154, .88), transparent 45%),
+        radial-gradient(ellipse at 53% 38%, rgba(167, 214, 121, .74), transparent 51%),
+        radial-gradient(ellipse at 72% 58%, rgba(111, 180, 111, .6), transparent 52%),
+        radial-gradient(ellipse at 48% 80%, rgba(79, 148, 99, .38), transparent 66%);
+      filter: blur(4px);
+      opacity: .92;
+      transform: rotate(-1deg);
     }
-    .grass-wash.fresh { stroke: rgba(176, 222, 78, .66); stroke-width: 31; }
-    .grass-wash.light { stroke: rgba(211, 238, 126, .58); stroke-width: 22; animation-delay: -2.6s; }
-    .grass-wash.mid { stroke: rgba(105, 184, 92, .5); stroke-width: 27; animation-delay: -4.1s; }
-    .grass-wash.deep { stroke: rgba(48, 126, 78, .34); stroke-width: 18; animation-delay: -1.4s; }
-    .grass-dry-brush {
-      fill: none;
-      stroke: rgba(107, 179, 78, .33);
-      stroke-width: 10;
-      stroke-linecap: round;
-      stroke-dasharray: 44 18 70 26;
-      filter: blur(2.6px);
-      transform-origin: 50% 100%;
-      animation: grass-wash-breathe 10.8s ease-in-out infinite reverse;
+    .grass-underwash::before,
+    .grass-underwash::after {
+      content: "";
+      position: absolute;
+      border-radius: 58% 42% 62% 38% / 48% 61% 39% 52%;
+      background: radial-gradient(ellipse, rgba(215, 237, 158, .55), rgba(131, 194, 126, .22) 58%, transparent 75%);
+      filter: blur(9px);
     }
-    @keyframes grass-wash-breathe {
-      0%, 48%, 100% { transform: translate3d(0, 0, 0) skewX(0deg); }
-      61% { transform: translate3d(1px, -.5px, 0) skewX(.35deg); }
-      73% { transform: translate3d(-.7px, .2px, 0) skewX(-.22deg); }
-      86% { transform: translate3d(1.4px, -.25px, 0) skewX(.42deg); }
+    .grass-underwash::before {
+      left: 8%;
+      top: -9%;
+      width: 48%;
+      height: 78%;
+      transform: rotate(3deg);
+    }
+    .grass-underwash::after {
+      right: 4%;
+      top: 7%;
+      width: 55%;
+      height: 72%;
+      transform: rotate(-4deg);
+      opacity: .78;
     }
     .mist-stream.mist-a { bottom: 15%; opacity: .62; }
     .mist-stream.mist-b { bottom: 2%; opacity: .58; }
@@ -1017,44 +988,9 @@
                 </g>
               </svg>
             </div>
-            <svg class="tree-bank" viewBox="0 0 900 240" preserveAspectRatio="none" aria-hidden="true">
-              <defs>
-                <linearGradient id="watercolor-bank-gradient" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#d5ef8a" stop-opacity=".82"/>
-                  <stop offset=".42" stop-color="#8bc67c" stop-opacity=".58"/>
-                  <stop offset="1" stop-color="#e8f4df" stop-opacity="0"/>
-                </linearGradient>
-                <filter id="grass-bleed" x="-18%" y="-35%" width="136%" height="180%">
-                  <feTurbulence type="fractalNoise" baseFrequency=".012 .055" numOctaves="2" seed="8" result="grain"/>
-                  <feDisplacementMap in="SourceGraphic" in2="grain" scale="7" xChannelSelector="R" yChannelSelector="G"/>
-                  <feGaussianBlur stdDeviation="2.4"/>
-                </filter>
-              </defs>
-              <path class="watercolor-haze" d="M5 180 C106 118 189 133 269 92 C349 51 424 92 497 72 C578 50 657 83 721 111 C788 140 843 141 898 188 C741 227 589 226 452 224 C286 222 128 232 5 180 Z"/>
-              <path class="watercolor-shadow" d="M25 191 C124 163 194 166 270 133 C357 96 438 117 516 101 C604 84 672 111 735 139 C790 164 842 170 886 197 C738 222 602 216 461 218 C300 220 151 224 25 191 Z"/>
-              <path class="watercolor-ground" d="M0 190 C57 151 107 158 153 143 C211 125 237 96 291 104 C349 112 377 79 433 88 C493 97 523 72 581 86 C642 101 684 91 734 121 C781 149 839 143 900 199 C770 226 632 230 466 227 C291 225 127 231 0 190 Z"/>
-              <g class="grass-wash fresh">
-                <path d="M43 165 C114 135 165 147 220 115 C278 82 333 104 388 82"/>
-                <path d="M335 101 C407 67 467 92 526 76 C593 58 649 94 704 112"/>
-                <path d="M632 121 C706 100 773 135 846 165"/>
-              </g>
-              <g class="grass-wash light">
-                <path d="M25 183 C91 155 146 163 198 135 C257 103 311 124 366 101"/>
-                <path d="M373 112 C441 84 505 103 565 88 C627 72 687 107 751 130"/>
-                <path d="M712 142 C770 130 821 159 876 184"/>
-              </g>
-              <g class="grass-wash mid">
-                <path d="M68 194 C129 168 183 175 238 145 C293 116 346 139 397 117"/>
-                <path d="M421 123 C480 98 539 118 591 104 C653 87 706 125 763 148"/>
-                <path d="M754 162 C800 153 840 176 883 195"/>
-              </g>
-              <g class="grass-wash deep">
-                <path d="M96 200 C166 179 217 184 279 157 C342 130 398 149 457 132"/>
-                <path d="M482 136 C541 118 599 135 650 125 C710 114 757 150 820 174"/>
-              </g>
-              <path class="grass-dry-brush" d="M38 173 C118 145 174 152 232 121 C292 89 348 113 405 92 C468 69 522 96 581 82 C648 67 709 111 770 133 C812 149 847 167 882 186"/>
-              <path class="grass-dry-brush" d="M77 193 C159 168 228 176 296 145 C373 111 440 139 509 119 C581 98 647 124 716 148 C771 167 821 177 862 195" style="opacity:.55;animation-delay:-3.5s"/>
-            </svg>
+            <div class="tree-bank" aria-hidden="true">
+              <span class="grass-underwash"></span>
+            </div>
             <span class="mist-stream mist-a" aria-hidden="true"></span>
             <span class="mist-stream mist-b" aria-hidden="true"></span>
             <span class="mist-stream mist-c" aria-hidden="true"></span>
@@ -1079,7 +1015,6 @@
               <span class="canopy-leaf c9" aria-hidden="true"></span>
               <span class="canopy-leaf c10" aria-hidden="true"></span>
               <span class="tree-mist" aria-hidden="true"></span>
-              <button class="tree-glow" id="tree-glow" type="button" aria-label="打开树顶的附注" aria-haspopup="dialog" aria-controls="tree-note-layer"></button>
             </figure>
           </div>
         </div>
@@ -1136,23 +1071,6 @@
       </section>
     </div>
   </main>
-
-  <div class="note-layer" id="tree-note-layer" hidden>
-    <section class="tree-note" role="dialog" aria-modal="true" aria-label="树顶附注">
-      <button class="note-close" id="note-close" type="button" aria-label="关闭附注">×</button>
-      <textarea class="note-text" id="note-text" aria-label="写下附注" placeholder="写下一点此刻想记住的事……"></textarea>
-      <div class="note-tools">
-        <label class="note-photo-label">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.2"/></svg>
-          放入一张图片
-          <input class="file-input" id="note-photo-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="为附注选择图片">
-        </label>
-        <span class="note-status" id="note-status" aria-live="polite"></span>
-      </div>
-      <div class="note-photo-preview" id="note-photo-preview" aria-live="polite"></div>
-    </section>
-  </div>
-
 
   <div class="image-lightbox" id="image-lightbox" hidden role="dialog" aria-modal="true" aria-label="查看完整照片">
     <button class="lightbox-close" id="lightbox-close" type="button" aria-label="关闭照片预览">×</button>
@@ -1287,77 +1205,80 @@
       }
 
       /* ============ 树顶附注（云端同步） ============ */
-      var glow = document.getElementById('tree-glow');
-      var noteLayer = document.getElementById('tree-note-layer');
-      var noteClose = document.getElementById('note-close');
-      var noteText = document.getElementById('note-text');
-      var notePhotoInput = document.getElementById('note-photo-input');
-      var notePhotoPreview = document.getElementById('note-photo-preview');
-      var noteStatus = document.getElementById('note-status');
-      var noteImageUrl = null;
-      var noteTimer = null;
+      if (document.getElementById('tree-note-layer') && document.getElementById('note-text')) {
 
-      function openTreeNote() {
-        noteLayer.hidden = false;
-        document.body.style.overflow = 'hidden';
-        window.setTimeout(function () { noteText.focus(); }, 40);
+              var glow = document.getElementById('tree-glow');
+              var noteLayer = document.getElementById('tree-note-layer');
+              var noteClose = document.getElementById('note-close');
+              var noteText = document.getElementById('note-text');
+              var notePhotoInput = document.getElementById('note-photo-input');
+              var notePhotoPreview = document.getElementById('note-photo-preview');
+              var noteStatus = document.getElementById('note-status');
+              var noteImageUrl = null;
+              var noteTimer = null;
+
+              function openTreeNote() {
+                noteLayer.hidden = false;
+                document.body.style.overflow = 'hidden';
+                window.setTimeout(function () { noteText.focus(); }, 40);
+              }
+              function closeTreeNote() {
+                noteLayer.hidden = true;
+                document.body.style.overflow = '';
+                if (glow && glow.focus) glow.focus();
+              }
+              if (glow) glow.addEventListener('click', openTreeNote);
+              noteClose.addEventListener('click', closeTreeNote);
+              noteLayer.addEventListener('click', function (event) {
+                if (event.target === noteLayer) closeTreeNote();
+              });
+
+              function showNotePhoto(url) {
+                notePhotoPreview.replaceChildren();
+                if (!url) return;
+                var image = document.createElement('img');
+                image.src = url;
+                image.alt = '附注图片';
+                notePhotoPreview.appendChild(image);
+              }
+
+              function saveNote() {
+                noteStatus.textContent = '同步到云端…';
+                sb('growth_notes', 'POST', { id: 'tree-note', text: noteText.value, image_url: noteImageUrl })
+                  .then(function () { noteStatus.textContent = '已保存到云端 · 换设备也在'; })
+                  .catch(function () { noteStatus.textContent = '保存失败，检查网络后重试'; });
+              }
+
+              sb('growth_notes?id=eq.tree-note&select=text,image_url')
+                .then(function (rows) {
+                  var n = rows && rows[0];
+                  if (!n) { noteStatus.textContent = ''; return; }
+                  noteText.value = n.text || '';
+                  noteImageUrl = n.image_url || null;
+                  showNotePhoto(noteImageUrl);
+                  if (n.text || n.image_url) noteStatus.textContent = '已从云端载入';
+                })
+                .catch(function () { noteStatus.textContent = '云端连接失败'; });
+
+              noteText.addEventListener('input', function () {
+                noteStatus.textContent = '输入中…';
+                clearTimeout(noteTimer);
+                noteTimer = setTimeout(saveNote, 900);
+              });
+
+              notePhotoInput.addEventListener('change', function () {
+                var file = notePhotoInput.files && notePhotoInput.files[0];
+                if (!file) return;
+                noteStatus.textContent = '处理图片…';
+                compressImage(file, function (dataUrl) {
+                  if (!dataUrl) { noteStatus.textContent = '图片读取失败'; return; }
+                  noteImageUrl = dataUrl;
+                  showNotePhoto(dataUrl);
+                  saveNote();
+                });
+                notePhotoInput.value = '';
+              });
       }
-      function closeTreeNote() {
-        noteLayer.hidden = true;
-        document.body.style.overflow = '';
-        if (glow && glow.focus) glow.focus();
-      }
-      glow.addEventListener('click', openTreeNote);
-      noteClose.addEventListener('click', closeTreeNote);
-      noteLayer.addEventListener('click', function (event) {
-        if (event.target === noteLayer) closeTreeNote();
-      });
-
-      function showNotePhoto(url) {
-        notePhotoPreview.replaceChildren();
-        if (!url) return;
-        var image = document.createElement('img');
-        image.src = url;
-        image.alt = '附注图片';
-        notePhotoPreview.appendChild(image);
-      }
-
-      function saveNote() {
-        noteStatus.textContent = '同步到云端…';
-        sb('growth_notes', 'POST', { id: 'tree-note', text: noteText.value, image_url: noteImageUrl })
-          .then(function () { noteStatus.textContent = '已保存到云端 · 换设备也在'; })
-          .catch(function () { noteStatus.textContent = '保存失败，检查网络后重试'; });
-      }
-
-      sb('growth_notes?id=eq.tree-note&select=text,image_url')
-        .then(function (rows) {
-          var n = rows && rows[0];
-          if (!n) { noteStatus.textContent = ''; return; }
-          noteText.value = n.text || '';
-          noteImageUrl = n.image_url || null;
-          showNotePhoto(noteImageUrl);
-          if (n.text || n.image_url) noteStatus.textContent = '已从云端载入';
-        })
-        .catch(function () { noteStatus.textContent = '云端连接失败'; });
-
-      noteText.addEventListener('input', function () {
-        noteStatus.textContent = '输入中…';
-        clearTimeout(noteTimer);
-        noteTimer = setTimeout(saveNote, 900);
-      });
-
-      notePhotoInput.addEventListener('change', function () {
-        var file = notePhotoInput.files && notePhotoInput.files[0];
-        if (!file) return;
-        noteStatus.textContent = '处理图片…';
-        compressImage(file, function (dataUrl) {
-          if (!dataUrl) { noteStatus.textContent = '图片读取失败'; return; }
-          noteImageUrl = dataUrl;
-          showNotePhoto(dataUrl);
-          saveNote();
-        });
-        notePhotoInput.value = '';
-      });
 
       /* ============ 时间线（云端同步） ============ */
       var timeline = document.querySelector('.timeline');
@@ -1552,7 +1473,7 @@
         if (event.key !== 'Escape') return;
         if (!lightbox.hidden) closeLightbox();
         else if (!momentLayer.hidden) closeMoment();
-        else if (!noteLayer.hidden) closeTreeNote();
+        else if (typeof noteLayer !== 'undefined' && noteLayer && !noteLayer.hidden) closeTreeNote();
       });
 
       loadEvents();
