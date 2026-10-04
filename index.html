@@ -2549,6 +2549,8 @@
       function showView(name) {
         document.body.classList.toggle('tree-mode', name === 'tree');
         document.body.classList.toggle('timeline-mode', name === 'timeline');
+        var cm = document.getElementById('cloud-mark');
+        if (cm) cm.setAttribute('aria-label', name === 'timeline' ? '可拖动的月亮页面切换器' : '可拖动的太阳页面切换器');
         tabs.forEach(function (tab) {
           var on = tab.id === 'tab-' + name;
           tab.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -2930,6 +2932,10 @@
           'body.tree-mode .floating-switch .cloud-mark{background-size:70px 48px!important;background-position:center!important;background-repeat:no-repeat!important;}' +
           'body.tree-mode .floating-switch .cloud-mark::before{inset:13px 20px!important;}' +
           'body.tree-mode .floating-switch .cloud-mark::after{inset:4px 6px!important;}' +
+          '@media (min-width:1024px){' +
+          '.timeline-flower-art{position:fixed!important;left:36px!important;top:50%!important;transform:translateY(-50%)!important;width:280px!important;height:auto!important;max-height:82vh!important;object-fit:contain!important;z-index:1!important;}' +
+          '.timeline-garden-scroll{position:fixed!important;right:36px!important;left:auto!important;top:50%!important;transform:translateY(-50%)!important;width:280px!important;height:82vh!important;object-fit:cover!important;object-position:center!important;opacity:.92!important;z-index:1!important;}' +
+          '}' +
           '.timeline-garden-scroll{position:absolute!important;z-index:0!important;top:640px!important;left:38px!important;width:min(320px,30vw)!important;height:900px!important;object-fit:cover!important;object-position:center top!important;opacity:.92!important;mix-blend-mode:normal!important;filter:saturate(.95)!important;-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 6%,#000 94%,transparent 100%)!important;mask-image:linear-gradient(to bottom,transparent 0,#000 6%,#000 94%,transparent 100%)!important;}';
         document.head.appendChild(growthEditStyle);
       }
