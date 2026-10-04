@@ -1818,7 +1818,7 @@
     }
     .year-date {
       flex: 0 0 auto;
-      min-width: 92px;
+      min-width: max-content;
       color: #a88c48;
       font-family: "LXGW WenKai TC", "KaiTi", "STKaiti", cursive;
       font-size: 18px;
@@ -1871,6 +1871,102 @@
       .year-detail { gap: 8px; }
       .year-date { min-width: 82px; font-size: 16px; }
       .year-note { min-width: 48px; font-size: 14px; }
+    }
+
+    /* The directory is its own full-height page: the years scroll, the canvas does not. */
+    body.timeline-mode {
+      height: 100vh;
+      height: 100svh;
+      overflow: hidden;
+    }
+    body.timeline-mode .app,
+    body.timeline-mode .frame,
+    #timeline-view {
+      height: 100vh;
+      height: 100svh;
+      min-height: 0;
+      overflow: hidden;
+    }
+    .timeline-shell.year-index-shell {
+      height: 100vh;
+      height: 100svh;
+      padding-top: 0;
+      padding-bottom: 0;
+      display: flex;
+      align-items: stretch;
+      overflow: hidden;
+    }
+    .year-directory {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      overscroll-behavior-y: contain;
+      padding-top: clamp(42px, 7vh, 82px);
+      padding-bottom: clamp(54px, 8vh, 92px);
+      scrollbar-width: thin;
+      scrollbar-color: color-mix(in srgb, var(--timeline-gold) 36%, transparent) transparent;
+    }
+    .year-directory::-webkit-scrollbar { width: 5px; }
+    .year-directory::-webkit-scrollbar-track { background: transparent; }
+    .year-directory::-webkit-scrollbar-thumb {
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--timeline-gold) 34%, transparent);
+    }
+    .year-directory::before {
+      top: calc(clamp(42px, 7vh, 82px) + 29px);
+      bottom: auto;
+      height: 1740px;
+    }
+    .year-directory-shine {
+      top: calc(clamp(42px, 7vh, 82px) + 6px);
+    }
+
+    /* Restore the flower's presence and keep an even, calm margin on both sides. */
+    .timeline-flower-art {
+      left: max(38px, calc((100vw - 1120px) / 2 + 38px));
+      width: min(calc(33.333vw + 38px), 411px);
+      height: min(92vh, 820px);
+      padding: 0;
+      object-position: center bottom;
+    }
+
+    /* Every row reads like a journal index line; selecting a year reveals its date. */
+    .year-detail {
+      gap: 0;
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: none;
+      transition: none;
+    }
+    .year-date {
+      flex-basis: 0;
+      min-width: 0;
+      max-width: 0;
+      opacity: 0;
+      overflow: hidden;
+      pointer-events: none;
+      transition: max-width .34s cubic-bezier(.2,.72,.25,1), min-width .34s cubic-bezier(.2,.72,.25,1), opacity .24s ease, margin-right .34s ease, font-size .3s ease, color .3s ease;
+    }
+    .year-button.is-selected + .year-detail .year-date {
+      min-width: 112px;
+      max-width: 132px;
+      margin-right: 14px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .year-note {
+      min-width: 90px;
+      border-bottom-color: color-mix(in srgb, var(--timeline-gold) 72%, transparent);
+    }
+    @media (max-width: 760px) {
+      .timeline-shell.year-index-shell { height: 100svh; padding: 0 14px; }
+      .year-directory { padding-top: 52px; padding-bottom: 72px; }
+      .year-button.is-selected + .year-detail .year-date {
+        min-width: 104px;
+        max-width: 112px;
+        margin-right: 8px;
+      }
     }
   </style>
 </head>
@@ -2056,203 +2152,203 @@
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2025">2025</button>
                 <span class="year-detail" id="year-detail-2025" role="group" aria-label="2025年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2025年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2025年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2025年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2024">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2024">2024</button>
                 <span class="year-detail" id="year-detail-2024" role="group" aria-label="2024年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2024年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2024年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2024年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2023">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2023">2023</button>
                 <span class="year-detail" id="year-detail-2023" role="group" aria-label="2023年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2023年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2023年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2023年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2022">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2022">2022</button>
                 <span class="year-detail" id="year-detail-2022" role="group" aria-label="2022年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2022年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2022年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2022年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2021">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2021">2021</button>
                 <span class="year-detail" id="year-detail-2021" role="group" aria-label="2021年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2021年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2021年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2021年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2020">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2020">2020</button>
                 <span class="year-detail" id="year-detail-2020" role="group" aria-label="2020年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2020年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2020年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2020年的记事" data-placeholder="写几个字" spellcheck="false">广告公司打拼</span>
                 </span>
               </li>
               <li class="year-item" data-year="2019">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2019">2019</button>
                 <span class="year-detail" id="year-detail-2019" role="group" aria-label="2019年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2019年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2019年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2019年的记事" data-placeholder="写几个字" spellcheck="false">职场新人</span>
                 </span>
               </li>
               <li class="year-item" data-year="2018">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2018">2018</button>
                 <span class="year-detail" id="year-detail-2018" role="group" aria-label="2018年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2018年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2018年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2018年的记事" data-placeholder="写几个字" spellcheck="false">毕业，开始工作</span>
                 </span>
               </li>
               <li class="year-item" data-year="2017">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2017">2017</button>
                 <span class="year-detail" id="year-detail-2017" role="group" aria-label="2017年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2017年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2017年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2017年的记事" data-placeholder="写几个字" spellcheck="false">大学时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2016">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2016">2016</button>
                 <span class="year-detail" id="year-detail-2016" role="group" aria-label="2016年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2016年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2016年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2016年的记事" data-placeholder="写几个字" spellcheck="false">大学时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2015">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2015">2015</button>
                 <span class="year-detail" id="year-detail-2015" role="group" aria-label="2015年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2015年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2015年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2015年的记事" data-placeholder="写几个字" spellcheck="false">大学时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2014">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2014">2014</button>
                 <span class="year-detail" id="year-detail-2014" role="group" aria-label="2014年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2014年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2014年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2014年的记事" data-placeholder="写几个字" spellcheck="false">踏入大学校门</span>
                 </span>
               </li>
               <li class="year-item" data-year="2013">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2013">2013</button>
                 <span class="year-detail" id="year-detail-2013" role="group" aria-label="2013年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2013年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2013年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2013年的记事" data-placeholder="写几个字" spellcheck="false">高中时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2012">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2012">2012</button>
                 <span class="year-detail" id="year-detail-2012" role="group" aria-label="2012年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2012年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2012年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2012年的记事" data-placeholder="写几个字" spellcheck="false">高中时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2011">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2011">2011</button>
                 <span class="year-detail" id="year-detail-2011" role="group" aria-label="2011年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2011年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2011年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2011年的记事" data-placeholder="写几个字" spellcheck="false">走进高中</span>
                 </span>
               </li>
               <li class="year-item" data-year="2010">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2010">2010</button>
                 <span class="year-detail" id="year-detail-2010" role="group" aria-label="2010年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2010年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2010年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2010年的记事" data-placeholder="写几个字" spellcheck="false">初中时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2009">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2009">2009</button>
                 <span class="year-detail" id="year-detail-2009" role="group" aria-label="2009年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2009年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2009年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2009年的记事" data-placeholder="写几个字" spellcheck="false">初中时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2008">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2008">2008</button>
                 <span class="year-detail" id="year-detail-2008" role="group" aria-label="2008年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2008年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2008年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2008年的记事" data-placeholder="写几个字" spellcheck="false">走进初中</span>
                 </span>
               </li>
               <li class="year-item" data-year="2007">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2007">2007</button>
                 <span class="year-detail" id="year-detail-2007" role="group" aria-label="2007年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2007年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2007年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2007年的记事" data-placeholder="写几个字" spellcheck="false">小学生活</span>
                 </span>
               </li>
               <li class="year-item" data-year="2006">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2006">2006</button>
                 <span class="year-detail" id="year-detail-2006" role="group" aria-label="2006年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2006年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2006年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2006年的记事" data-placeholder="写几个字" spellcheck="false">小学生活</span>
                 </span>
               </li>
               <li class="year-item" data-year="2005">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2005">2005</button>
                 <span class="year-detail" id="year-detail-2005" role="group" aria-label="2005年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2005年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2005年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2005年的记事" data-placeholder="写几个字" spellcheck="false">小学生活</span>
                 </span>
               </li>
               <li class="year-item" data-year="2004">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2004">2004</button>
                 <span class="year-detail" id="year-detail-2004" role="group" aria-label="2004年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2004年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2004年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2004年的记事" data-placeholder="写几个字" spellcheck="false">小学生活</span>
                 </span>
               </li>
               <li class="year-item" data-year="2003">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2003">2003</button>
                 <span class="year-detail" id="year-detail-2003" role="group" aria-label="2003年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2003年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2003年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2003年的记事" data-placeholder="写几个字" spellcheck="false">小学生活</span>
                 </span>
               </li>
               <li class="year-item" data-year="2002">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2002">2002</button>
                 <span class="year-detail" id="year-detail-2002" role="group" aria-label="2002年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2002年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2002年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2002年的记事" data-placeholder="写几个字" spellcheck="false">背上小书包，上小学</span>
                 </span>
               </li>
               <li class="year-item" data-year="2001">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2001">2001</button>
                 <span class="year-detail" id="year-detail-2001" role="group" aria-label="2001年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2001年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2001年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2001年的记事" data-placeholder="写几个字" spellcheck="false">幼儿园的快乐时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="2000">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-2000">2000</button>
                 <span class="year-detail" id="year-detail-2000" role="group" aria-label="2000年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="2000年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2000年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="2000年的记事" data-placeholder="写几个字" spellcheck="false">幼儿园的快乐时光</span>
                 </span>
               </li>
               <li class="year-item" data-year="1999">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-1999">1999</button>
                 <span class="year-detail" id="year-detail-1999" role="group" aria-label="1999年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="1999年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1999年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1999年的记事" data-placeholder="写几个字" spellcheck="false">上幼儿园</span>
                 </span>
               </li>
               <li class="year-item" data-year="1998">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-1998">1998</button>
                 <span class="year-detail" id="year-detail-1998" role="group" aria-label="1998年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="1998年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1998年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1998年的记事" data-placeholder="写几个字" spellcheck="false">牙牙学语</span>
                 </span>
               </li>
               <li class="year-item" data-year="1997">
                 <button class="year-button" type="button" aria-pressed="false" aria-controls="year-detail-1997">1997</button>
                 <span class="year-detail" id="year-detail-1997" role="group" aria-label="1997年的日期与记事">
                   <span class="year-date" contenteditable="true" role="textbox" aria-label="1997年的日期" data-placeholder="日期" spellcheck="false"></span>
-                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1997年的记事" data-placeholder="写几个字" spellcheck="false"></span>
+                  <span class="year-note" contenteditable="true" role="textbox" aria-label="1997年的记事" data-placeholder="写几个字" spellcheck="false">蹒跚学步</span>
                 </span>
               </li>
               <li class="year-item" data-year="1996">
