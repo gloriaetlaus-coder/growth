@@ -1128,12 +1128,15 @@
 
   <script>
     (function () {
+      'use strict';
+
+      /* ============ 视图切换 ============ */
       var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
       var views = Array.prototype.slice.call(document.querySelectorAll('.view'));
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       function showView(name) {
         document.body.classList.toggle('tree-mode', name === 'tree');
-        document.body.classList.toggle('timeline-mode', name === 'timeline');
         tabs.forEach(function (tab) {
           var on = tab.id === 'tab-' + name;
           tab.setAttribute('aria-selected', on ? 'true' : 'false');
@@ -1144,7 +1147,7 @@
           view.classList.toggle('active', on);
           view.hidden = !on;
         });
-        window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+        window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
 
       tabs.forEach(function (tab) {
@@ -1158,40 +1161,18 @@
         });
       });
 
-      var glow = document.getElementById('tree-glow');
-      var noteLayer = document.getElementById('tree-note-layer');
-      var noteClose = document.getElementById('note-close');
-      var noteText = document.getElementById('note-text');
-      var notePhotoInput = document.getElementById('note-photo-input');
-      var notePhotoPreview = document.getElementById('note-photo-preview');
-      var noteStatus = document.getElementById('note-status');
-      var notePhotoUrl = null;
-
-      function openTreeNote() {
-        noteLayer.hidden = false;
-        document.body.style.overflow = 'hidden';
-        window.setTimeout(function () { noteText.focus(); }, 40);
+      function bindYearLinks() {
+        document.querySelectorAll('.year-link').forEach(function (button) {
+          button.onclick = function () {
+            showView('timeline');
+            var target = document.querySelector('.entry[data-year="' + button.getAttribute('data-jump') + '"]');
+            if (target) setTimeout(function () { target.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 80);
+          };
+        });
       }
-      function closeTreeNote() {
-        noteLayer.hidden = true;
-        document.body.style.overflow = '';
-        glow.focus();
-      }
-      glow.addEventListener('click', openTreeNote);
-      noteClose.addEventListener('click', closeTreeNote);
-      noteLayer.addEventListener('click', function (event) { if (event.target === noteLayer) closeTreeNote(); });
-      notePhotoInput.addEventListener('change', function () {
-        var file = notePhotoInput.files && notePhotoInput.files[0];
-        if (!file) return;
-        if (notePhotoUrl) URL.revokeObjectURL(notePhotoUrl);
-        notePhotoUrl = URL.createObjectURL(file);
-        var image = document.createElement('img');
-        image.src = notePhotoUrl;
-        image.alt = '附注中选择的图片';
-        notePhotoPreview.replaceChildren(image);
-        noteStatus.textContent = '图片已放入';
-      });
+      bindYearLinks();
 
+      /* ============ 灯箱 ============ */
       var lightbox = document.getElementById('image-lightbox');
       var lightboxImage = document.getElementById('lightbox-image');
       var lightboxClose = document.getElementById('lightbox-close');
@@ -1210,77 +1191,316 @@
       lightboxClose.addEventListener('click', closeLightbox);
       lightbox.addEventListener('click', function (event) { if (event.target === lightbox) closeLightbox(); });
 
+      /* ============ 云端（Supabase） ============ */
+      var SB_URL = 'https://nugvtktgeusmffzxrljt.supabase.co';
+      var SB_KEY = 'sb_publishable_DqU_FMdkYJ0Qicgykrv9vA_tvLx3XFf';
+
+      function sb(path, method, body) {
+        var opts = {
+          method: method || 'GET',
+          headers: {
+            'apikey': SB_KEY,
+            'Authorization': 'Bearer ' + SB_KEY,
+            'Content-Type': 'application/json',
+            'Prefer': 'return=representation,resolution=merge-duplicates'
+          }
+        };
+        if (body !== undefined) opts.body = JSON.stringify(body);
+        return fetch(SB_URL + '/rest/v1/' + path, opts).then(function (r) {
+          if (!r.ok) throw new Error('http ' + r.status);
+          return r.json();
+        });
+      }
+
+      function fmtDate(iso) {
+        var p = String(iso).split('-');
+        return p[0] + ' · ' + p[1] + ' · ' + p[2];
+      }
+
+      function compressImage(file, cb) {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var img = new Image();
+          img.onload = function () {
+            var k = Math.min(1, 1000 / Math.max(img.width, img.height));
+            var c = document.createElement('canvas');
+            c.width = Math.max(1, Math.round(img.width * k));
+            c.height = Math.max(1, Math.round(img.height * k));
+            c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+            cb(c.toDataURL('image/jpeg', 0.82));
+          };
+          img.onerror = function () { cb(null); };
+          img.src = reader.result;
+        };
+        reader.onerror = function () { cb(null); };
+        reader.readAsDataURL(file);
+      }
+
       function autoGrow(field) {
         field.style.height = '35px';
         field.style.height = Math.max(35, field.scrollHeight) + 'px';
       }
-      document.querySelectorAll('.memory-line').forEach(function (field) {
-        field.addEventListener('input', function () { autoGrow(field); });
+
+      /* ============ 树顶附注（云端同步） ============ */
+      var glow = document.getElementById('tree-glow');
+      var noteLayer = document.getElementById('tree-note-layer');
+      var noteClose = document.getElementById('note-close');
+      var noteText = document.getElementById('note-text');
+      var notePhotoInput = document.getElementById('note-photo-input');
+      var notePhotoPreview = document.getElementById('note-photo-preview');
+      var noteStatus = document.getElementById('note-status');
+      var noteImageUrl = null;
+      var noteTimer = null;
+
+      function openTreeNote() {
+        noteLayer.hidden = false;
+        document.body.style.overflow = 'hidden';
+        window.setTimeout(function () { noteText.focus(); }, 40);
+      }
+      function closeTreeNote() {
+        noteLayer.hidden = true;
+        document.body.style.overflow = '';
+        if (glow && glow.focus) glow.focus();
+      }
+      glow.addEventListener('click', openTreeNote);
+      noteClose.addEventListener('click', closeTreeNote);
+      noteLayer.addEventListener('click', function (event) {
+        if (event.target === noteLayer) closeTreeNote();
       });
 
-      function wireEntry(entry) {
-        var input = entry.querySelector('.file-input');
-        var label = entry.querySelector('.photo-label');
-        var preview = entry.querySelector('.photo-preview');
-        var remove = entry.querySelector('.remove-photo');
-        var currentUrl = null;
+      function showNotePhoto(url) {
+        notePhotoPreview.replaceChildren();
+        if (!url) return;
+        var image = document.createElement('img');
+        image.src = url;
+        image.alt = '附注图片';
+        notePhotoPreview.appendChild(image);
+      }
+
+      function saveNote() {
+        noteStatus.textContent = '同步到云端…';
+        sb('growth_notes', 'POST', { id: 'tree-note', text: noteText.value, image_url: noteImageUrl })
+          .then(function () { noteStatus.textContent = '已保存到云端 · 换设备也在'; })
+          .catch(function () { noteStatus.textContent = '保存失败，检查网络后重试'; });
+      }
+
+      sb('growth_notes?id=eq.tree-note&select=text,image_url')
+        .then(function (rows) {
+          var n = rows && rows[0];
+          if (!n) { noteStatus.textContent = ''; return; }
+          noteText.value = n.text || '';
+          noteImageUrl = n.image_url || null;
+          showNotePhoto(noteImageUrl);
+          if (n.text || n.image_url) noteStatus.textContent = '已从云端载入';
+        })
+        .catch(function () { noteStatus.textContent = '云端连接失败'; });
+
+      noteText.addEventListener('input', function () {
+        noteStatus.textContent = '输入中…';
+        clearTimeout(noteTimer);
+        noteTimer = setTimeout(saveNote, 900);
+      });
+
+      notePhotoInput.addEventListener('change', function () {
+        var file = notePhotoInput.files && notePhotoInput.files[0];
+        if (!file) return;
+        noteStatus.textContent = '处理图片…';
+        compressImage(file, function (dataUrl) {
+          if (!dataUrl) { noteStatus.textContent = '图片读取失败'; return; }
+          noteImageUrl = dataUrl;
+          showNotePhoto(dataUrl);
+          saveNote();
+        });
+        notePhotoInput.value = '';
+      });
+
+      /* ============ 时间线（云端同步） ============ */
+      var timeline = document.querySelector('.timeline');
+      var PHOTO_SVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.2"/></svg>';
+
+      function wirePhotoThumb(img, preview) {
+        img.tabIndex = 0;
+        img.setAttribute('role', 'button');
+        img.setAttribute('aria-label', '查看完整照片');
+        img.addEventListener('click', function () { openLightbox(img.src, img.alt); });
+        img.addEventListener('keydown', function (event) {
+          if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(img.src, img.alt); }
+        });
+      }
+
+      function buildEntry(ev) {
+        var article = document.createElement('article');
+        article.className = 'entry';
+        article.setAttribute('data-year', String(ev.date).split('-')[0]);
+        article.setAttribute('data-id', ev.id);
+
+        var dateDiv = document.createElement('div');
+        dateDiv.className = 'date';
+        dateDiv.textContent = fmtDate(ev.date);
+
+        var card = document.createElement('div');
+        card.className = 'memory-card';
+        var grid = document.createElement('div');
+        grid.className = 'memory-grid';
+
+        var copy = document.createElement('div');
+        copy.className = 'memory-copy';
+        var h3 = document.createElement('h3');
+        h3.textContent = ev.title;
+        var field = document.createElement('textarea');
+        field.className = 'memory-line';
+        field.rows = 1;
+        field.placeholder = '写一句话记住它…';
+        field.setAttribute('aria-label', '为' + ev.title + '写下记忆');
+        field.value = ev.text || '';
+        copy.appendChild(h3);
+        copy.appendChild(field);
+
+        var photoBox = document.createElement('div');
+        photoBox.className = 'memory-photo';
+        var label = document.createElement('label');
+        label.className = 'photo-label' + (ev.image_url ? ' hidden' : '');
+        label.innerHTML = PHOTO_SVG + '贴照片';
+        var input = document.createElement('input');
+        input.className = 'file-input';
+        input.type = 'file';
+        input.accept = 'image/png,image/jpeg,image/webp,image/gif';
+        input.setAttribute('aria-label', '为' + ev.title + '选择照片');
+        label.appendChild(input);
+
+        var preview = document.createElement('div');
+        preview.className = 'photo-preview';
+        preview.setAttribute('aria-live', 'polite');
+        if (ev.image_url) {
+          var im0 = document.createElement('img');
+          im0.src = ev.image_url;
+          im0.alt = '这段记忆的照片';
+          wirePhotoThumb(im0);
+          preview.appendChild(im0);
+        }
+
+        var actions = document.createElement('div');
+        actions.className = 'entry-actions';
+        var removeBtn = document.createElement('button');
+        removeBtn.className = 'remove-photo' + (ev.image_url ? '' : ' hidden');
+        removeBtn.type = 'button';
+        removeBtn.textContent = '移除照片';
+        var delBtn = document.createElement('button');
+        delBtn.className = 'remove-photo';
+        delBtn.type = 'button';
+        delBtn.textContent = '删除';
+        delBtn.style.marginLeft = '8px';
+        actions.appendChild(removeBtn);
+        actions.appendChild(delBtn);
+
+        photoBox.appendChild(label);
+        photoBox.appendChild(preview);
+        photoBox.appendChild(actions);
+        grid.appendChild(copy);
+        grid.appendChild(photoBox);
+        card.appendChild(grid);
+        article.appendChild(dateDiv);
+        article.appendChild(card);
+
+        autoGrow(field);
+        var textTimer = null;
+        field.addEventListener('input', function () {
+          autoGrow(field);
+          clearTimeout(textTimer);
+          textTimer = setTimeout(function () {
+            sb('growth_events?id=eq.' + encodeURIComponent(ev.id), 'PATCH', { text: field.value }).catch(function () {});
+          }, 900);
+        });
+
         input.addEventListener('change', function () {
           var file = input.files && input.files[0];
           if (!file) return;
-          if (currentUrl) URL.revokeObjectURL(currentUrl);
-          currentUrl = URL.createObjectURL(file);
-          var image = document.createElement('img');
-          image.src = currentUrl;
-          image.alt = '这段成长记忆的照片';
-          image.tabIndex = 0;
-          image.setAttribute('role', 'button');
-          image.setAttribute('aria-label', '查看完整照片');
-          image.addEventListener('click', function () { openLightbox(currentUrl, image.alt); });
-          image.addEventListener('keydown', function (event) { if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openLightbox(currentUrl, image.alt); } });
-          preview.replaceChildren(image);
-          label.classList.add('hidden');
-          remove.classList.remove('hidden');
-        });
-        remove.addEventListener('click', function () {
-          if (currentUrl) URL.revokeObjectURL(currentUrl);
-          currentUrl = null;
+          compressImage(file, function (dataUrl) {
+            if (!dataUrl) return;
+            sb('growth_events?id=eq.' + encodeURIComponent(ev.id), 'PATCH', { image_url: dataUrl })
+              .then(function () {
+                ev.image_url = dataUrl;
+                preview.replaceChildren();
+                var image = document.createElement('img');
+                image.src = dataUrl;
+                image.alt = '这段记忆的照片';
+                wirePhotoThumb(image);
+                preview.appendChild(image);
+                label.classList.add('hidden');
+                removeBtn.classList.remove('hidden');
+              })
+              .catch(function () {});
+          });
           input.value = '';
-          preview.replaceChildren();
-          label.classList.remove('hidden');
-          remove.classList.add('hidden');
         });
-      }
-      document.querySelectorAll('.entry').forEach(wireEntry);
 
+        removeBtn.addEventListener('click', function () {
+          sb('growth_events?id=eq.' + encodeURIComponent(ev.id), 'PATCH', { image_url: null })
+            .then(function () {
+              ev.image_url = null;
+              preview.replaceChildren();
+              label.classList.remove('hidden');
+              removeBtn.classList.add('hidden');
+            })
+            .catch(function () {});
+        });
+
+        delBtn.addEventListener('click', function () {
+          if (!window.confirm('确定删除「' + ev.title + '」这条记忆吗？')) return;
+          sb('growth_events?id=eq.' + encodeURIComponent(ev.id), 'DELETE')
+            .then(function () { article.remove(); })
+            .catch(function () {});
+        });
+
+        return article;
+      }
+
+      function renderEvents(list) {
+        timeline.querySelectorAll('.entry').forEach(function (e) { e.remove(); });
+        var sorted = list.slice().sort(function (a, b) { return b.date.localeCompare(a.date); });
+        sorted.forEach(function (ev) { timeline.appendChild(buildEntry(ev)); });
+        bindYearLinks();
+      }
+
+      function loadEvents() {
+        sb('growth_events?select=*&order=date.desc')
+          .then(function (rows) { if (rows && rows.length) renderEvents(rows); })
+          .catch(function () {});
+      }
+
+      /* 添加新的时刻 */
+      var addMomentBtn = document.getElementById('add-moment');
       var momentLayer = document.getElementById('moment-layer');
       var momentForm = document.getElementById('moment-form');
       var momentDate = document.getElementById('moment-date');
       var momentTitle = document.getElementById('moment-title');
       var momentCancel = document.getElementById('moment-cancel');
-      var addMoment = document.getElementById('add-moment');
-      function closeMoment() { momentLayer.hidden = true; document.body.style.overflow = ''; addMoment.focus(); }
-      addMoment.addEventListener('click', function () { momentLayer.hidden = false; document.body.style.overflow = 'hidden'; momentDate.focus(); });
+
+      function closeMoment() {
+        momentLayer.hidden = true;
+        document.body.style.overflow = '';
+      }
+      addMomentBtn.addEventListener('click', function () {
+        momentLayer.hidden = false;
+        document.body.style.overflow = 'hidden';
+        momentDate.focus();
+      });
       momentCancel.addEventListener('click', closeMoment);
       momentLayer.addEventListener('click', function (event) { if (event.target === momentLayer) closeMoment(); });
       momentForm.addEventListener('submit', function (event) {
         event.preventDefault();
         if (!momentDate.value || !momentTitle.value.trim()) return;
-        var parts = momentDate.value.split('-');
-        var article = document.createElement('article');
-        article.className = 'entry';
-        article.setAttribute('data-year', parts[0]);
-        article.innerHTML = '<div class="date">' + parts[0] + ' · ' + parts[1] + ' · ' + parts[2] + '</div>' +
-          '<div class="memory-card"><div class="memory-grid"><div class="memory-copy"><h3></h3><textarea class="memory-line" rows="1" aria-label="写下这一刻"></textarea></div>' +
-          '<div class="memory-photo"><label class="photo-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h3l1.5-2h7L17 7h3v12H4z"/><circle cx="12" cy="13" r="3.2"/></svg>贴照片<input class="file-input" type="file" accept="image/png,image/jpeg,image/webp,image/gif" aria-label="为这一刻选择照片"></label><div class="photo-preview" aria-live="polite"></div><div class="entry-actions"><button class="remove-photo hidden" type="button">移除照片</button></div></div></div></div>';
-        article.querySelector('h3').textContent = momentTitle.value.trim();
-        var timeline = document.querySelector('.timeline');
-        timeline.insertBefore(article, timeline.children[1] || null);
-        var field = article.querySelector('.memory-line');
-        field.addEventListener('input', function () { autoGrow(field); });
-        wireEntry(article);
-        momentForm.reset();
-        closeMoment();
-        article.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        sb('growth_events', 'POST', {
+          id: 'e' + Date.now(),
+          date: momentDate.value,
+          title: momentTitle.value.trim(),
+          text: '',
+          image_url: null
+        }).then(function () {
+          momentForm.reset();
+          closeMoment();
+          loadEvents();
+        }).catch(function () {});
       });
 
       document.addEventListener('keydown', function (event) {
@@ -1289,6 +1509,8 @@
         else if (!momentLayer.hidden) closeMoment();
         else if (!noteLayer.hidden) closeTreeNote();
       });
+
+      loadEvents();
     })();
   </script>
 </body>
