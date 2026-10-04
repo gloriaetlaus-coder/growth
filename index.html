@@ -163,15 +163,15 @@
 
     /* tree view */
     .tree-layout {
-      min-height: calc(100vh - 92px);
+      min-height: calc(100vh - 82px);
       display: grid;
-      place-items: center;
-      padding: 12px 0 34px;
+      place-items: stretch center;
+      padding: 0;
     }
     .tree-stage {
       position: relative;
       width: 100%;
-      height: min(82vh, 820px);
+      height: max(640px, calc(100vh - 82px));
       min-height: 560px;
       display: grid;
       place-items: center;
@@ -330,9 +330,10 @@
       border-radius: 34% 66% 45% 55% / 18% 22% 17% 20%;
     }
     @keyframes tree-sway {
-      0% { transform: translate3d(-2px, 2px, 0) rotate(-.24deg) scale(.999); }
-      45% { transform: translate3d(1px, -1px, 0) rotate(.06deg) scale(1.001); }
-      100% { transform: translate3d(3px, 1px, 0) rotate(.28deg) scale(1); }
+      0% { transform: translate3d(-7px, 2px, 0) rotate(-1.05deg) scale(.998); }
+      38% { transform: translate3d(2px, -1px, 0) rotate(.18deg) scale(1.001); }
+      68% { transform: translate3d(7px, 1px, 0) rotate(1.08deg) scale(1); }
+      100% { transform: translate3d(-2px, 0, 0) rotate(-.34deg) scale(.999); }
     }
     @keyframes low-mist {
       from { transform: translate3d(-3%, 1%, 0) scale(.98); opacity: .6; }
@@ -460,9 +461,8 @@
       .season { display: none; }
       .tabs { width: auto; margin-left: auto; }
       .tab { flex: none; min-width: 42px; }
-      .tree-layout { min-height: calc(100vh - 80px); padding: 0; }
-      .tree-stage { min-height: 500px; height: calc(100vh - 88px); }
-      .tree-portrait { width: min(98vw, 620px); height: min(82vh, 760px); }
+      .tree-layout { min-height: calc(100vh - 74px); padding: 0; }
+      .tree-stage { min-height: 600px; height: calc(100vh - 74px); }
       .tree-glow { top: 15%; }
       .note-layer { padding: 14px; }
       .tree-note { width: min(96vw, 430px); min-height: 310px; padding: 48px 25px 30px; }
@@ -493,9 +493,17 @@
       animation: page-shimmer 16s ease-in-out infinite alternate;
     }
     .tree-stage { isolation: isolate; overflow: visible; }
-    .tree-portrait { z-index: 3; }
+    .tree-portrait {
+      z-index: 4;
+      position: absolute;
+      left: clamp(-32px, 5vw, 74px);
+      bottom: -2%;
+      width: min(63vw, 720px);
+      height: min(79vh, 790px);
+    }
     .tree-body {
-      animation: tree-sway 9.6s cubic-bezier(.42, 0, .58, 1) infinite alternate;
+      transform-origin: 50% 94%;
+      animation: tree-sway 7.2s cubic-bezier(.42, 0, .58, 1) infinite alternate;
       will-change: transform;
     }
     .tree-image { position: absolute; inset: 0; }
@@ -503,55 +511,60 @@
       position: absolute;
       z-index: 0;
       left: 50%;
-      bottom: -8%;
+      inset-block: 0;
       width: 100vw;
-      height: 46%;
-      overflow: visible;
+      overflow: hidden;
       pointer-events: none;
       transform: translateX(-50%);
-      opacity: .94;
-      filter: drop-shadow(0 12px 24px rgba(96, 171, 169, .12));
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 82%, transparent 100%);
-      mask-image: linear-gradient(to bottom, transparent 0, #000 13%, #000 82%, transparent 100%);
+      opacity: .98;
     }
-    .landscape-river svg { display: block; width: 100%; height: 100%; overflow: visible; }
+    .landscape-river::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(244,249,245,.88), transparent 28%),
+        radial-gradient(ellipse at 68% 22%, rgba(255,255,255,.52), transparent 34%);
+      pointer-events: none;
+    }
+    .landscape-river svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+    .distant-mountain { fill: rgba(120, 167, 148, .13); filter: blur(4px); }
+    .distant-mountain.back { fill: rgba(118, 154, 143, .08); filter: blur(7px); }
+    .field-wash { fill: url(#field-gradient); }
     .river-water {
-      fill: none;
-      stroke: url(#river-water-gradient);
-      stroke-width: 176;
-      stroke-linecap: round;
-      filter: blur(2px);
+      fill: url(#river-water-gradient);
+      filter: drop-shadow(0 0 22px rgba(107, 192, 188, .22));
     }
-    .river-soft-edge {
+    .river-bank-edge {
       fill: none;
-      stroke: rgba(174, 224, 216, .2);
-      stroke-width: 230;
+      stroke: rgba(210, 234, 216, .7);
+      stroke-width: 16;
       stroke-linecap: round;
-      filter: blur(18px);
+      filter: blur(8px);
     }
     .river-ripple {
       fill: none;
-      stroke: rgba(255, 255, 248, .75);
+      stroke: rgba(255, 255, 248, .78);
       stroke-width: 3;
       stroke-linecap: round;
-      stroke-dasharray: 8 34 52 27 13 42;
+      stroke-dasharray: 10 30 56 25 16 40;
       animation: river-shimmer 6.8s ease-in-out infinite alternate;
     }
-    .river-ripple.r2 { stroke-width: 2; opacity: .68; animation-delay: -2.7s; animation-duration: 8.4s; }
-    .river-ripple.r3 { stroke-width: 4; opacity: .48; animation-delay: -4.6s; animation-duration: 9.6s; }
+    .river-ripple.r2 { stroke-width: 2; opacity: .7; animation-delay: -2.7s; animation-duration: 8.4s; }
+    .river-ripple.r3 { stroke-width: 4; opacity: .5; animation-delay: -4.6s; animation-duration: 9.6s; }
+    .water-glint { fill: rgba(255,255,244,.72); filter: blur(1px); animation: water-glint 5.8s ease-in-out infinite alternate; }
     .tree-bank {
       position: absolute;
-      z-index: 1;
-      left: 50%;
-      bottom: 1.5%;
-      width: min(42%, 360px);
-      height: 13%;
-      transform: translateX(-50%);
+      z-index: 2;
+      left: clamp(52px, 21vw, 260px);
+      bottom: 1%;
+      width: min(47vw, 520px);
+      height: 19%;
       pointer-events: none;
-      border-radius: 50%;
+      border-radius: 52% 48% 44% 56% / 58% 62% 38% 42%;
       background:
-        radial-gradient(ellipse at center, rgba(239, 245, 231, .98) 0 22%, rgba(222, 237, 218, .8) 39%, rgba(218, 235, 221, .34) 61%, transparent 76%);
-      filter: blur(3px);
+        radial-gradient(ellipse at 46% 42%, rgba(242, 247, 230, .99) 0 25%, rgba(218, 237, 207, .92) 46%, rgba(184, 217, 190, .52) 68%, transparent 77%);
+      filter: blur(2px);
     }
     .mist-stream {
       position: absolute;
@@ -616,8 +629,12 @@
       91% { transform: translate3d(0, 0, 0) rotate(0deg) scale(1); }
     }
     @keyframes river-shimmer {
-      from { stroke-dashoffset: 0; opacity: .38; }
-      to { stroke-dashoffset: -132; opacity: .92; }
+      from { stroke-dashoffset: 0; opacity: .34; }
+      to { stroke-dashoffset: -132; opacity: .94; }
+    }
+    @keyframes water-glint {
+      from { opacity: .28; transform: translateX(-8px); }
+      to { opacity: .88; transform: translateX(13px); }
     }
     @keyframes page-shimmer {
       from { background-position: -3% 2%, 4% -2%, 0 3%; }
@@ -747,7 +764,9 @@
       .memory-photo, .photo-label, .photo-preview, .photo-preview img { width: 76px; height: 76px; }
       .memory-card { padding: 18px 15px; }
       .entry-actions { align-items: flex-end; }
-      .landscape-river { left: 50%; right: auto; bottom: -2%; width: 100vw; height: 29%; }
+      .tree-portrait { left: -7vw; bottom: 1%; width: min(76vw, 430px); height: min(66vh, 610px); transform: none; }
+      .tree-bank { left: -4%; bottom: 3%; width: 64vw; height: 15%; }
+      .landscape-river { left: 50%; right: auto; inset-block: 0; width: 100vw; height: 100%; }
       .mist-stream { width: 120%; }
     }
 
@@ -771,20 +790,34 @@
         <div class="tree-layout">
           <div class="tree-stage">
             <div class="landscape-river" aria-hidden="true">
-              <svg viewBox="0 0 1440 420" preserveAspectRatio="none">
+              <svg viewBox="0 0 1440 780" preserveAspectRatio="none">
                 <defs>
-                  <linearGradient id="river-water-gradient" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0" stop-color="#dff5ef" stop-opacity=".2"/>
-                    <stop offset=".28" stop-color="#a8ddd5" stop-opacity=".7"/>
-                    <stop offset=".58" stop-color="#76c1b8" stop-opacity=".62"/>
-                    <stop offset="1" stop-color="#d8f1e9" stop-opacity=".24"/>
+                  <linearGradient id="field-gradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stop-color="#eaf3e7" stop-opacity=".08"/>
+                    <stop offset=".48" stop-color="#dbeedc" stop-opacity=".5"/>
+                    <stop offset="1" stop-color="#cfe7d8" stop-opacity=".72"/>
+                  </linearGradient>
+                  <linearGradient id="river-water-gradient" x1=".35" y1="0" x2=".7" y2="1">
+                    <stop offset="0" stop-color="#eefdf9" stop-opacity=".62"/>
+                    <stop offset=".22" stop-color="#c9eee8" stop-opacity=".86"/>
+                    <stop offset=".56" stop-color="#8fd3ca" stop-opacity=".79"/>
+                    <stop offset="1" stop-color="#d9f5ee" stop-opacity=".9"/>
                   </linearGradient>
                 </defs>
-                <path class="river-soft-edge" d="M-80 120 C210 8 390 36 535 174 C655 290 760 355 945 286 C1124 220 1238 56 1520 104"/>
-                <path class="river-water" d="M-80 120 C210 8 390 36 535 174 C655 290 760 355 945 286 C1124 220 1238 56 1520 104"/>
-                <path class="river-ripple r1" d="M-70 88 C220 0 392 52 540 187 C657 294 770 331 939 270 C1120 204 1242 45 1510 88"/>
-                <path class="river-ripple r2" d="M-86 142 C205 28 374 49 522 178 C651 292 769 376 958 296 C1135 222 1250 79 1528 120"/>
-                <path class="river-ripple r3" d="M-62 112 C214 24 391 50 535 172 C664 281 766 350 946 280 C1124 211 1248 66 1512 103"/>
+                <path class="distant-mountain back" d="M0 278 C115 194 220 207 330 262 C438 317 515 250 616 207 C748 152 826 252 930 267 C1058 286 1140 181 1249 190 C1348 197 1397 243 1440 266 L1440 400 L0 400 Z"/>
+                <path class="distant-mountain" d="M0 317 C143 251 243 275 352 315 C446 349 526 284 632 252 C739 220 831 300 935 309 C1054 320 1138 241 1240 245 C1334 249 1395 292 1440 318 L1440 433 L0 433 Z"/>
+                <path class="field-wash" d="M0 304 C260 342 470 317 690 304 C931 289 1163 322 1440 298 L1440 780 L0 780 Z"/>
+                <path class="river-water" d="M610 244 C676 292 800 315 937 352 C1091 394 1141 469 1002 548 C875 620 812 696 756 780 L1398 780 C1271 674 1215 600 1268 520 C1330 423 1188 345 1015 310 C846 276 721 252 640 228 Z"/>
+                <path class="river-bank-edge" d="M608 244 C675 294 801 316 938 354 C1094 397 1144 469 1002 550 C874 623 811 699 756 784"/>
+                <path class="river-bank-edge" d="M640 228 C721 252 846 276 1015 310 C1188 345 1330 423 1268 520 C1215 600 1271 674 1398 780"/>
+                <path class="river-ripple r1" d="M707 291 C809 316 912 333 1003 369 C1082 400 1114 435 1080 469"/>
+                <path class="river-ripple r2" d="M921 506 C1010 481 1102 477 1190 513 C1242 535 1251 571 1238 603"/>
+                <path class="river-ripple r3" d="M819 666 C918 621 1051 605 1170 638 C1238 657 1280 700 1319 749"/>
+                <g class="water-glint">
+                  <ellipse cx="1030" cy="405" rx="34" ry="3"/><ellipse cx="1090" cy="427" rx="17" ry="2"/>
+                  <ellipse cx="978" cy="561" rx="46" ry="4"/><ellipse cx="1098" cy="584" rx="29" ry="3"/>
+                  <ellipse cx="927" cy="704" rx="56" ry="5"/><ellipse cx="1162" cy="721" rx="71" ry="5"/>
+                </g>
               </svg>
             </div>
             <span class="tree-bank" aria-hidden="true"></span>
