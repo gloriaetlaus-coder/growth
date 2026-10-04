@@ -22,9 +22,14 @@
       --jade: #5f8c73;
       --jade-deep: #295b47;
       --moss: #7d9475;
-      --gold: #b38a36;
-      --gold-bright: #f4d98e;
-      --gold-soft: rgba(190, 147, 59, .19);
+      --gold: #dfc77f;
+      --gold-bright: #fff0b8;
+      --gold-soft: rgba(235, 211, 145, .24);
+      --timeline-ink: #769687;
+      --timeline-muted: #93ad9f;
+      --timeline-gold: #dfc77f;
+      --timeline-gold-bright: #fff4c9;
+      --timeline-gold-glow: rgba(245, 220, 146, .72);
       --shadow: rgba(35, 59, 47, .16);
       --mist: rgba(255, 255, 255, .78);
       --trunk: #6f5745;
@@ -42,9 +47,14 @@
         --jade: #86b69a;
         --jade-deep: #b5d8c3;
         --moss: #769a7f;
-        --gold: #d7b560;
-        --gold-bright: #fff0b7;
-        --gold-soft: rgba(217, 180, 93, .14);
+        --gold: #ead99f;
+        --gold-bright: #fff5ce;
+        --gold-soft: rgba(242, 221, 158, .18);
+        --timeline-ink: #c6d9cf;
+        --timeline-muted: #aebfb6;
+        --timeline-gold: #ead99f;
+        --timeline-gold-bright: #fff8d9;
+        --timeline-gold-glow: rgba(255, 235, 174, .68);
         --shadow: rgba(0, 0, 0, .3);
         --mist: rgba(197, 222, 207, .1);
         --trunk: #8c7057;
@@ -335,7 +345,26 @@
     }
 
     /* timeline view */
-    .timeline-shell { max-width: 820px; margin: 0 auto; padding: 44px 0 70px; }
+    body.timeline-mode {
+      color: var(--timeline-ink);
+      background:
+        radial-gradient(circle at 16% 12%, rgba(255, 255, 255, .82), transparent 34%),
+        radial-gradient(circle at 83% 28%, rgba(255, 241, 191, .24), transparent 32%),
+        radial-gradient(circle at 50% 88%, rgba(210, 238, 226, .26), transparent 38%),
+        linear-gradient(160deg, var(--paper), var(--paper-deep));
+    }
+    body.timeline-mode .tabs {
+      border-color: rgba(205, 223, 212, .55);
+      background: rgba(250, 252, 248, .72);
+      box-shadow: 0 8px 28px rgba(80, 111, 95, .06);
+    }
+    body.timeline-mode .tab { color: #9eb5a9; }
+    body.timeline-mode .tab[aria-selected="true"] {
+      color: #fffdf5;
+      background: #a9c3b5;
+      box-shadow: 0 5px 18px rgba(142, 177, 157, .28);
+    }
+    .timeline-shell { max-width: 820px; margin: 0 auto; padding: 44px 0 70px; color: var(--timeline-ink); }
     .timeline-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 44px; }
     h2 {
       margin: 0;
@@ -353,8 +382,8 @@
       top: 8px;
       bottom: 8px;
       width: 2px;
-      background: linear-gradient(to bottom, rgba(179,138,54,.1), var(--gold) 12%, var(--gold) 88%, rgba(179,138,54,.1));
-      box-shadow: 0 0 12px rgba(217, 181, 94, .52);
+      background: linear-gradient(to bottom, rgba(255, 244, 204, .08), var(--timeline-gold) 12%, var(--timeline-gold-bright) 48%, var(--timeline-gold) 88%, rgba(255, 244, 204, .08));
+      box-shadow: 0 0 8px var(--timeline-gold-glow), 0 0 22px rgba(255, 238, 176, .42), 0 0 38px rgba(225, 209, 157, .2);
     }
     .shine {
       position: absolute;
@@ -364,8 +393,9 @@
       width: 10px;
       height: 72px;
       border-radius: 50%;
-      background: radial-gradient(ellipse, rgba(255,248,198,.95), rgba(255,226,126,.5) 38%, transparent 72%);
-      filter: blur(1px);
+      background: radial-gradient(ellipse, rgba(255, 255, 239, 1), rgba(255, 241, 187, .76) 34%, rgba(235, 215, 157, .3) 57%, transparent 76%);
+      filter: blur(.6px);
+      box-shadow: 0 0 18px rgba(255, 242, 190, .66);
       animation: flow 4.8s ease-in-out infinite;
       pointer-events: none;
     }
@@ -379,12 +409,12 @@
       top: 9px;
       width: 13px;
       height: 13px;
-      border: 2px solid var(--gold);
+      border: 2px solid var(--timeline-gold-bright);
       border-radius: 50%;
-      background: var(--surface-solid);
-      box-shadow: 0 0 0 5px var(--gold-soft), 0 0 16px rgba(222, 186, 92, .42);
+      background: rgba(255, 253, 241, .9);
+      box-shadow: 0 0 0 5px var(--gold-soft), 0 0 15px var(--timeline-gold-glow), 0 0 28px rgba(255, 239, 180, .36);
     }
-    .date { color: var(--gold); font-size: 14px; font-weight: 600; letter-spacing: .1em; }
+    .date { color: #cdb572; font-size: 14px; font-weight: 500; letter-spacing: .1em; text-shadow: 0 0 12px rgba(255, 238, 177, .72); }
     .memory-card {
       margin-top: 10px;
       border: 1px solid var(--line);
@@ -393,8 +423,8 @@
       box-shadow: 0 16px 42px rgba(38, 64, 50, .1);
       padding: 22px 24px;
     }
-    .memory-card h3 { margin: 0; font-size: 21px; font-weight: 500; }
-    .memory-card p { margin: 10px 0 0; color: var(--muted); line-height: 1.8; }
+    .memory-card h3 { margin: 0; color: var(--timeline-ink); font-size: 21px; font-weight: 500; }
+    .memory-card p { margin: 10px 0 0; color: var(--timeline-muted); line-height: 1.8; }
     .photo-preview { margin-top: 16px; }
     .photo-preview img {
       display: block;
@@ -416,11 +446,13 @@
       cursor: pointer;
     }
     .photo-label svg { width: 16px; height: 16px; }
-    .session-note { color: var(--muted); font-size: 12px; }
+    .session-note { color: var(--timeline-muted); font-size: 12px; }
     .file-input { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
     .remove-photo { border: 0; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; padding: 5px; }
     .hidden { display: none !important; }
-    .end-mark { margin: 32px 0 0 61px; color: var(--muted); font-family: "LXGW WenKai TC", cursive; font-size: 13px; letter-spacing: .12em; }
+    .end-mark { margin: 32px 0 0 61px; color: var(--timeline-muted); font-family: "LXGW WenKai TC", cursive; font-size: 13px; letter-spacing: .12em; }
+    .timeline .photo-label { color: #c3ad6f; }
+    .timeline .remove-photo { color: #bba76c; }
 
     @media (max-width: 760px) {
       .app { padding-inline: 0; }
@@ -619,17 +651,16 @@
       resize: none;
       border: 0;
       border-radius: 0;
-      border-bottom: 1px solid color-mix(in srgb, var(--gold) 50%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--timeline-gold) 72%, transparent);
       outline: 0;
       padding: 5px 2px 6px;
-      color: var(--ink);
+      color: var(--timeline-ink);
       background: transparent;
       font-family: "LXGW WenKai TC", "STKaiti", cursive;
       font-size: 16px;
       line-height: 24px;
     }
-    .memory-line::placeholder { color: color-mix(in srgb, var(--muted) 52%, transparent); }
-    .memory-line:focus { border-bottom-color: var(--gold); box-shadow: 0 5px 7px -7px var(--gold); }
+    .memory-line:focus { border-bottom-color: var(--timeline-gold-bright); box-shadow: 0 6px 10px -7px var(--timeline-gold-glow); }
     .memory-photo { width: 92px; }
     .photo-label {
       position: relative;
@@ -661,14 +692,14 @@
       .photo-preview:hover img { transform: scale(2.45); box-shadow: 0 18px 55px rgba(23, 43, 33, .3); }
     }
     .entry-actions { justify-content: flex-end; margin-top: 7px; }
-    .remove-photo { font-size: 12px; text-decoration: none; color: var(--gold); }
+    .remove-photo { font-size: 12px; text-decoration: none; color: #c8b474; }
     .add-moment {
       display: block;
       margin: 36px auto 0;
-      border: 1px solid color-mix(in srgb, var(--gold) 45%, transparent);
+      border: 1px solid color-mix(in srgb, var(--timeline-gold) 62%, transparent);
       border-radius: 999px;
       padding: 11px 19px;
-      color: var(--gold);
+      color: #bda96f;
       background: color-mix(in srgb, var(--surface-solid) 72%, transparent);
       cursor: pointer;
     }
@@ -689,13 +720,25 @@
     .moment-layer { position: fixed; z-index: 80; inset: 0; display: grid; place-items: center; padding: 22px; background: rgba(20,34,27,.38); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
     .moment-layer[hidden] { display: none; }
     .moment-panel { position: relative; width: min(92vw, 470px); padding: 31px 28px 27px; background: var(--surface-solid); border-radius: 24px 8px 24px 8px; box-shadow: 0 26px 80px var(--shadow); }
-    .moment-panel h3 { margin: 0 0 20px; font-size: 22px; font-weight: 500; }
-    .moment-panel label { display: block; margin-top: 14px; color: var(--muted); font-size: 13px; }
-    .moment-panel input { width: 100%; margin-top: 6px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; outline: 0; padding: 9px 2px; color: var(--ink); background: transparent; }
+    .moment-panel h3 { margin: 0 0 20px; color: var(--timeline-ink); font-size: 22px; font-weight: 500; }
+    .moment-panel label { display: block; margin-top: 14px; color: var(--timeline-muted); font-size: 13px; }
+    .moment-panel input { width: 100%; margin-top: 6px; border: 0; border-bottom: 1px solid color-mix(in srgb, var(--timeline-gold) 55%, transparent); border-radius: 0; outline: 0; padding: 9px 2px; color: var(--timeline-ink); background: transparent; }
     .moment-buttons { display: flex; justify-content: flex-end; gap: 10px; margin-top: 25px; }
     .moment-buttons button { border: 0; border-radius: 999px; padding: 9px 15px; cursor: pointer; }
-    .moment-cancel { background: transparent; color: var(--muted); }
-    .moment-create { background: var(--jade-deep); color: var(--surface-solid); }
+    .moment-cancel { background: transparent; color: var(--timeline-muted); }
+    .moment-create { background: #aac4b6; color: #fffdf7; }
+
+    @media (prefers-color-scheme: dark) {
+      body.timeline-mode .tabs {
+        border-color: rgba(204, 224, 211, .14);
+        background: rgba(31, 49, 40, .72);
+      }
+      body.timeline-mode .tab { color: #aebfb6; }
+      body.timeline-mode .tab[aria-selected="true"] { color: #fff8da; background: #789989; }
+      .entry::before { background: rgba(35, 51, 43, .94); }
+      .date { color: var(--timeline-gold); }
+      .timeline .photo-label, .timeline .remove-photo, .add-moment { color: var(--timeline-gold); }
+    }
 
     @media (max-width: 760px) {
       .timeline-shell { padding-top: 12px; }
@@ -785,7 +828,7 @@
                 <div class="memory-grid">
                   <div class="memory-copy">
                     <h3>开始间隔年</h3>
-                    <textarea class="memory-line" rows="1" aria-label="为开始间隔年写下记忆" placeholder="写一句话记住它…"></textarea>
+                    <textarea class="memory-line" rows="1" aria-label="为开始间隔年写下记忆" ></textarea>
                   </div>
                   <div class="memory-photo">
                     <label class="photo-label">
@@ -805,7 +848,7 @@
                 <div class="memory-grid">
                   <div class="memory-copy">
                     <h3>我出生了</h3>
-                    <textarea class="memory-line" rows="1" aria-label="为出生写下记忆" placeholder="写一句话记住它…"></textarea>
+                    <textarea class="memory-line" rows="1" aria-label="为出生写下记忆"></textarea>
                   </div>
                   <div class="memory-photo">
                     <label class="photo-label">
@@ -852,7 +895,7 @@
     <form class="moment-panel" id="moment-form" aria-label="添加新的时刻">
       <h3>添加新的时刻</h3>
       <label>日期<input id="moment-date" type="date" required aria-label="选择日期"></label>
-      <label>标题<input id="moment-title" type="text" maxlength="40" required placeholder="这一刻的名字"></label>
+      <label>标题<input id="moment-title" type="text" maxlength="40" required ></label>
       <div class="moment-buttons">
         <button class="moment-cancel" id="moment-cancel" type="button">取消</button>
         <button class="moment-create" type="submit">添加</button>
