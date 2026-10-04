@@ -564,28 +564,59 @@
     .distant-mountain { fill: rgba(120, 167, 148, .13); filter: blur(4px); }
     .distant-mountain.back { fill: rgba(118, 154, 143, .08); filter: blur(7px); }
     .field-wash { fill: url(#field-gradient); }
+    .soft-sun {
+      position: absolute;
+      z-index: 1;
+      top: 8%;
+      right: 22%;
+      width: clamp(92px, 11vw, 158px);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: .68;
+      background:
+        radial-gradient(circle, rgba(255,251,213,.82) 0 13%, rgba(247,231,155,.48) 25%, rgba(242,223,147,.2) 44%, transparent 70%);
+      filter: blur(3px);
+      animation: sun-breathe 8.5s ease-in-out infinite alternate;
+    }
+    .soft-sun::before,
+    .soft-sun::after {
+      content: "";
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .soft-sun::before {
+      inset: 17%;
+      background: radial-gradient(circle at 43% 40%, rgba(255,255,235,.72), rgba(245,224,147,.3) 48%, transparent 73%);
+      filter: blur(5px);
+    }
+    .soft-sun::after {
+      inset: -26%;
+      border: 1px solid rgba(247,230,169,.12);
+      box-shadow: 0 0 36px rgba(247,230,169,.18), inset 0 0 42px rgba(255,246,201,.12);
+      filter: blur(7px);
+    }
+    @keyframes sun-breathe {
+      from { transform: scale(.96); opacity: .55; }
+      to { transform: scale(1.04); opacity: .74; }
+    }
     .river-water {
       fill: url(#river-water-gradient);
-      filter: drop-shadow(0 0 22px rgba(107, 192, 188, .22));
+      opacity: .8;
+      filter: blur(5px) drop-shadow(0 0 20px rgba(107, 192, 160, .12));
     }
-    .river-bank-edge {
+    .river-bank-edge,
+    .river-ripple { display: none; }
+    .river-water-wash {
       fill: none;
-      stroke: rgba(210, 234, 216, .7);
-      stroke-width: 16;
       stroke-linecap: round;
-      filter: blur(8px);
+      filter: blur(11px);
+      opacity: .34;
     }
-    .river-ripple {
-      fill: none;
-      stroke: rgba(255, 255, 248, .78);
-      stroke-width: 3;
-      stroke-linecap: round;
-      stroke-dasharray: 10 30 56 25 16 40;
-      animation: river-shimmer 6.8s ease-in-out infinite alternate;
-    }
-    .river-ripple.r2 { stroke-width: 2; opacity: .7; animation-delay: -2.7s; animation-duration: 8.4s; }
-    .river-ripple.r3 { stroke-width: 4; opacity: .5; animation-delay: -4.6s; animation-duration: 9.6s; }
-    .water-glint { fill: rgba(255,255,244,.72); filter: blur(1px); animation: water-glint 5.8s ease-in-out infinite alternate; }
+    .river-water-wash.cool { stroke: rgba(86, 166, 133, .38); stroke-width: 72; }
+    .river-water-wash.light { stroke: rgba(231, 248, 222, .62); stroke-width: 58; }
+    .water-glint { fill: rgba(255,255,239,.64); filter: blur(2px); animation: water-glint 5.8s ease-in-out infinite alternate; }
     .tree-bank {
       position: absolute;
       z-index: 2;
@@ -838,29 +869,23 @@
         linear-gradient(90deg, rgba(222,239,222,.1), rgba(197,233,214,.08));
     }
     .river-water {
-      filter: drop-shadow(0 0 24px rgba(83, 159, 111, .18));
-    }
-    .river-bank-edge {
-      stroke: rgba(201, 230, 202, .64);
-      stroke-width: 13;
-      filter: blur(7px);
-    }
-    .river-ripple {
-      stroke: rgba(250, 255, 239, .72);
-      stroke-width: 2.2;
-      stroke-dasharray: 12 25 38 18 8 28;
+      opacity: .76;
+      filter: blur(6px) drop-shadow(0 0 24px rgba(83, 159, 111, .12));
     }
     .fine-ripple {
       fill: none;
-      stroke: rgba(239, 255, 229, .72);
-      stroke-width: 1.35;
+      stroke: rgba(211, 241, 214, .66);
+      stroke-width: 1.15;
       stroke-linecap: round;
+      opacity: .72;
+      filter: blur(.22px);
       animation: fine-water 8.5s ease-in-out infinite alternate;
     }
-    .fine-ripple.dim { stroke: rgba(100, 169, 119, .28); animation-duration: 11s; animation-direction: alternate-reverse; }
-    .fine-ripple.bright { stroke: rgba(255,255,236,.88); filter: blur(.15px); animation-duration: 6.6s; }
-    .water-reflection { opacity: .42; filter: blur(9px); animation: reflected-light 9s ease-in-out infinite alternate; }
-    .water-reflection-soft { opacity: .25; filter: blur(15px); animation: reflected-light 12s ease-in-out infinite alternate-reverse; }
+    .fine-ripple.dim { stroke: rgba(74, 145, 111, .26); stroke-width: .85; opacity: .5; animation-duration: 11s; animation-direction: alternate-reverse; }
+    .fine-ripple.bright { stroke: rgba(255,255,238,.8); stroke-width: 1.45; opacity: .76; filter: blur(.35px); animation-duration: 6.6s; }
+    .fine-ripple.ink { stroke: rgba(67, 139, 108, .2); stroke-width: .72; opacity: .62; animation-duration: 10.2s; }
+    .water-reflection { opacity: .25; filter: blur(13px); animation: reflected-light 9s ease-in-out infinite alternate; }
+    .water-reflection-soft { opacity: .18; filter: blur(18px); animation: reflected-light 12s ease-in-out infinite alternate-reverse; }
     .water-glint { fill: rgba(248,255,229,.76); }
     @keyframes fine-water {
       from { transform: translateX(-5px); opacity: .4; }
@@ -940,6 +965,7 @@
       .tree-layout { min-height: 100vh; }
       .tree-stage { height: 100vh; min-height: 600px; }
       .tree-bank { left: -10%; bottom: 1%; width: 82vw; height: 20%; }
+      .soft-sun { top: 10%; right: 18%; width: 104px; opacity: .58; }
     }
 
     /* Draggable cloud switch: quiet at rest, clear on approach */
@@ -1364,6 +1390,7 @@
       <section class="view active" id="tree-view" role="tabpanel" aria-labelledby="tab-tree">
         <div class="tree-layout">
           <div class="tree-stage">
+            <span class="soft-sun" aria-hidden="true"></span>
             <div class="landscape-river" aria-hidden="true">
               <svg viewBox="0 0 1440 780" preserveAspectRatio="none">
                 <defs>
@@ -1372,11 +1399,12 @@
                     <stop offset=".48" stop-color="#dbeedc" stop-opacity=".5"/>
                     <stop offset="1" stop-color="#cfe7d8" stop-opacity=".72"/>
                   </linearGradient>
-                  <linearGradient id="river-water-gradient" x1=".35" y1="0" x2=".7" y2="1">
-                    <stop offset="0" stop-color="#eef9e8" stop-opacity=".7"/>
-                    <stop offset=".22" stop-color="#cbeacb" stop-opacity=".88"/>
-                    <stop offset=".56" stop-color="#8fcba5" stop-opacity=".82"/>
-                    <stop offset="1" stop-color="#dff3d7" stop-opacity=".92"/>
+                  <linearGradient id="river-water-gradient" x1=".28" y1="0" x2=".76" y2="1">
+                    <stop offset="0" stop-color="#edf8e9" stop-opacity=".34"/>
+                    <stop offset=".2" stop-color="#d4edd4" stop-opacity=".56"/>
+                    <stop offset=".5" stop-color="#9fd3b2" stop-opacity=".68"/>
+                    <stop offset=".76" stop-color="#bce2c6" stop-opacity=".62"/>
+                    <stop offset="1" stop-color="#e5f4dc" stop-opacity=".5"/>
                   </linearGradient>
                   <linearGradient id="reflection-gradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0" stop-color="#4f9964" stop-opacity=".55"/>
@@ -1401,14 +1429,18 @@
                 <path class="field-wash" d="M0 304 C260 342 470 317 690 304 C931 289 1163 322 1440 298 L1440 780 L0 780 Z"/>
                 <path class="river-water" d="M610 244 C676 292 800 315 937 352 C1091 394 1141 469 1002 548 C875 620 812 696 756 780 L1398 780 C1271 674 1215 600 1268 520 C1330 423 1188 345 1015 310 C846 276 721 252 640 228 Z"/>
                 <g clip-path="url(#river-clip)">
+                  <path class="river-water-wash cool" d="M670 255 C790 315 1056 323 1134 430 C1205 526 1060 581 955 649 C902 684 857 733 825 790"/>
+                  <path class="river-water-wash light" d="M744 259 C852 310 1088 347 1170 423 C1230 480 1160 548 1081 605 C1025 646 1000 709 1012 793"/>
                   <path class="water-reflection" fill="url(#reflection-gradient)" d="M732 260 C782 287 838 299 876 321 C896 370 889 420 856 471 C826 517 815 575 818 642 C785 608 771 553 784 500 C802 426 796 365 746 316 Z"/>
                   <path class="water-reflection-soft" fill="url(#reflection-gradient)" d="M1005 323 C1072 351 1121 375 1153 414 C1128 451 1100 489 1087 541 C1068 505 1074 463 1094 424 C1060 394 1024 376 982 359 Z"/>
-                  <path class="fine-ripple bright" d="M682 286 Q743 280 806 293 M731 307 Q804 300 873 315 M790 332 Q876 322 956 341"/>
-                  <path class="fine-ripple" d="M829 357 Q920 344 1007 367 M857 379 Q952 367 1047 391 M889 403 Q995 389 1090 416"/>
-                  <path class="fine-ripple dim" d="M915 432 Q1016 414 1110 442 M914 457 Q1022 438 1131 466 M899 484 Q1016 459 1130 489"/>
-                  <path class="fine-ripple bright" d="M867 516 Q971 492 1082 510 M842 544 Q960 514 1084 535 M820 574 Q947 541 1080 561"/>
-                  <path class="fine-ripple" d="M803 607 Q940 570 1093 593 M780 641 Q934 599 1110 627 M762 678 Q929 630 1135 664"/>
-                  <path class="fine-ripple dim" d="M748 713 Q923 659 1171 701 M739 748 Q936 691 1233 741 M748 772 Q975 724 1308 775"/>
+                  <path class="fine-ripple bright" d="M681 282 Q716 277 748 284 M764 293 Q794 289 822 296 M724 307 Q761 302 793 309 M813 316 Q846 312 876 320 M782 332 Q828 325 866 334 M889 339 Q923 334 955 343"/>
+                  <path class="fine-ripple" d="M826 356 Q871 349 908 357 M932 363 Q970 358 1007 368 M852 379 Q906 370 950 380 M972 382 Q1012 379 1048 391 M884 403 Q944 392 992 403 M1018 407 Q1055 407 1091 417"/>
+                  <path class="fine-ripple dim" d="M906 428 Q961 420 1008 430 M1034 433 Q1074 431 1110 442 M903 453 Q964 442 1016 453 M1040 456 Q1086 457 1131 467 M891 482 Q953 467 1007 480 M1031 481 Q1080 481 1130 490"/>
+                  <path class="fine-ripple ink" d="M885 497 Q932 486 978 494 M1002 496 Q1049 491 1092 501 M866 520 Q917 506 965 515 M989 516 Q1039 510 1084 521"/>
+                  <path class="fine-ripple bright" d="M852 538 Q910 521 963 532 M988 532 Q1038 525 1085 536 M823 569 Q889 548 948 560 M973 560 Q1026 552 1081 562"/>
+                  <path class="fine-ripple" d="M804 603 Q870 583 930 592 M954 590 Q1025 582 1093 594 M777 636 Q853 611 920 622 M947 619 Q1030 613 1111 628 M758 673 Q842 643 918 657 M946 652 Q1044 649 1136 665"/>
+                  <path class="fine-ripple ink" d="M768 689 Q842 664 905 675 M936 671 Q1026 665 1114 681 M748 710 Q834 680 909 696 M940 690 Q1056 688 1172 702"/>
+                  <path class="fine-ripple dim" d="M738 744 Q836 708 921 724 M954 715 Q1091 718 1234 742 M746 771 Q858 729 955 748 M992 742 Q1149 749 1308 776"/>
                 </g>
                 <path class="river-bank-edge" d="M608 244 C675 294 801 316 938 354 C1094 397 1144 469 1002 550 C874 623 811 699 756 784"/>
                 <path class="river-bank-edge" d="M640 228 C721 252 846 276 1015 310 C1188 345 1330 423 1268 520 C1215 600 1271 674 1398 780"/>
