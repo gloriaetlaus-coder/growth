@@ -2377,12 +2377,21 @@
       function alignTimelineDesktop() {
         if (window.innerWidth < 1024) return;
         var dir = document.querySelector('.year-directory');
-        if (!dir || !dir.offsetParent) return;
+        if (!dir || !dir.offsetParent || dir.getBoundingClientRect().width === 0) {
+          var tries = (alignTimelineDesktop._tries || 0) + 1;
+          alignTimelineDesktop._tries = tries;
+          if (tries < 12) setTimeout(alignTimelineDesktop, 150);
+          return;
+        }
+        alignTimelineDesktop._tries = 0;
         var targetDirLeft = 268; /* 金线 x=384 = 268+116；花可见右缘 346，间隙 38 */
         var rect = dir.getBoundingClientRect();
         var cur = parseFloat(getComputedStyle(dir).marginLeft) || 0;
         var next = cur + (targetDirLeft - rect.left);
-        if (Math.abs(next - cur) > 0.5) dir.style.marginLeft = next + 'px';
+        if (Math.abs(next - cur) > 0.5) {
+          dir.style.marginLeft = next + 'px';
+          setTimeout(alignTimelineDesktop, 120); /* 再确认一次 */
+        }
       }
       var alignT = null;
       window.addEventListener('resize', function () {
@@ -2402,7 +2411,7 @@
           view.hidden = !on;
         });
         window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
-        if (name === 'timeline') requestAnimationFrame(alignTimelineDesktop);
+        if (name === 'timeline') { alignTimelineDesktop._tries = 0; setTimeout(alignTimelineDesktop, 80); }
       }
 
       tabs.forEach(function (tab) {
