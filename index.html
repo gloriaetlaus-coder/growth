@@ -2884,7 +2884,70 @@ var PLANT_IMGS = {
           'body.timeline-mode .plant-column{gap:30px!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(2){margin-left:45px!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-left:-15px!important;}' +
-          'body.timeline-mode .plant-column-item:nth-child(4){margin-left:35px!important;}';
+          'body.timeline-mode .plant-column-item:nth-child(4){margin-left:35px!important;}' +
+          '/* 时间线强制墨绿 */' +
+          'body.timeline-mode { ' +
+          '        --ink: #e2ede5; ' +
+          '        --muted: #9eb2a5; ' +
+          '        --paper: #0d1814; ' +
+          '        --paper-deep: #12241c; ' +
+          '        --surface: rgba(18, 36, 28, .78); ' +
+          '        --surface-solid: #14281f; ' +
+          '        --line: rgba(208, 231, 216, .12); ' +
+          '        --jade: #86b69a; ' +
+          '        --jade-deep: #b5d8c3; ' +
+          '        --moss: #769a7f; ' +
+          '        --gold: #ead99f; ' +
+          '        --gold-bright: #fff5ce; ' +
+          '        --gold-soft: rgba(242, 221, 158, .18); ' +
+          '        --timeline-ink: #c6d9cf; ' +
+          '        --timeline-muted: #aebfb6; ' +
+          '        --timeline-gold: #ead99f; ' +
+          '        --timeline-gold-bright: #fff8d9; ' +
+          '        --timeline-gold-glow: rgba(255, 235, 174, .68); ' +
+          '        --shadow: rgba(0, 0, 0, .3); ' +
+          '        --mist: rgba(197, 222, 207, .1); ' +
+          '        --trunk: #8c7057; ' +
+          '        --trunk-light: #b79775; ' +
+          '      } ' +
+          ' ' +
+          'body.timeline-mode .tabs { ' +
+          '        border-color: rgba(204, 224, 211, .14); ' +
+          '        background: rgba(31, 49, 40, .72); ' +
+          '      } ' +
+          '      body.timeline-mode .tab { color: #aebfb6; } ' +
+          '      body.timeline-mode .tab[aria-selected="true"] { color: #fff8da; background: #789989; } ' +
+          '      .entry::before { background: rgba(35, 51, 43, .94); } ' +
+          '      .date { color: var(--timeline-gold); } ' +
+          '      .timeline .photo-label, .timeline .remove-photo, .add-moment { color: var(--timeline-gold); } ' +
+          ' ' +
+          '.ink-wind path { stroke: rgba(158, 202, 176, .46); } ' +
+          '      body.timeline-mode { ' +
+          '        --timeline-ink: #c7d9d0; ' +
+          '        --timeline-muted: #adbbb4; ' +
+          '        background: ' +
+          '          radial-gradient(circle at 16% 12%, rgba(83,112,96,.16), transparent 38%), ' +
+          '          radial-gradient(circle at 83% 28%, rgba(205,192,143,.1), transparent 34%), ' +
+          '          linear-gradient(160deg, #15241d, #1b3026); ' +
+          '      } ' +
+          '      body.timeline-mode .memory-card { background: rgba(31, 49, 40, .48); border-color: rgba(205, 224, 211, .1); } ' +
+          '      body.timeline-mode .memory-card h3, ' +
+          '      body.timeline-mode .memory-line, ' +
+          '      body.timeline-mode .moment-panel h3, ' +
+          '      body.timeline-mode .moment-panel input, ' +
+          '      body.timeline-mode .date-picker-trigger { color: var(--timeline-ink); } ' +
+          '      body.timeline-mode .moment-panel, ' +
+          '      body.timeline-mode .date-picker-popover { background: rgba(24, 42, 33, .96); } ' +
+          ' ' +
+          'body.timeline-mode .year-button { color: rgba(239,247,242,.25); text-shadow: 0 1px 12px rgba(0,0,0,.18); } ' +
+          '.year-button:hover, ' +
+          'body.timeline-mode .year-button:focus-visible { color: rgba(255,255,255,.92); } ' +
+          ' ' +
+          'body.timeline-mode .year-button.is-selected { color: var(--timeline-gold-bright); } ' +
+          'body.timeline-mode .year-date { color: var(--timeline-gold); } ' +
+          ' ' +
+          'body.timeline-mode .timeline-garden-scroll { opacity: .46; filter: saturate(.7) brightness(.86) contrast(1.05); } ' +
+          'body.timeline-mode .year-age { color: var(--timeline-gold); text-shadow: none; } ';
         document.head.appendChild(growthEditStyle);
       }
 
