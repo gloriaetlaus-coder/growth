@@ -2880,8 +2880,9 @@ var PLANT_IMGS = {
           'body.timeline-mode .app,body.timeline-mode .frame,body.timeline-mode #timeline-view{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .year-directory{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .timeline-shell.year-index-shell,body.timeline-mode .year-index-shell{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;display:block!important;}' +
-          'body.timeline-mode .plant-column{position:absolute!important;left:36px!important;top:80px!important;width:350px!important;display:flex!important;flex-direction:column!important;gap:80px!important;z-index:1!important;pointer-events:none!important;}' +
-          'body.timeline-mode .plant-column-item{width:100%!important;height:auto!important;display:block!important;background:transparent!important;border:0!important;}';
+          'body.timeline-mode .plant-column{position:absolute!important;left:36px!important;top:80px!important;width:320px!important;display:flex!important;flex-direction:column!important;gap:80px!important;z-index:1!important;pointer-events:none!important;}' +
+          'body.timeline-mode .plant-column-item{width:100%!important;height:auto!important;display:block!important;background:transparent!important;border:0!important;}' +
+          'body.timeline-mode .plant-column-item:not(:first-child){margin-top:-160px!important;}';
         document.head.appendChild(growthEditStyle);
       }
 
@@ -3231,7 +3232,7 @@ var PLANT_IMGS = {
         var col = document.createElement('div');
         col.id = 'plant-column';
         col.className = 'plant-column';
-        var order = ['epiphyllum', 'plant_plum.webp', 'plant_orchid.webp', 'plant_bamboo.webp', 'plant_lotus.webp'];
+        var order = ['epiphyllum', 'plant_plum.webp', 'plant_orchid.webp', 'plant_lotus.webp'];
         var alts = {epiphyllum: '昙花', 'plant_plum.webp': '梅', 'plant_orchid.webp': '兰', 'plant_bamboo.webp': '竹', 'plant_lotus.webp': '荷'};
         order.forEach(function(key) {
           if (!PLANT_IMGS[key]) return;
