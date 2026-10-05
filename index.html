@@ -2636,6 +2636,13 @@ var PLANT_IMGS = {
           }
           setSwitchOpen(!floatingSwitch.classList.contains('is-open'));
         });
+        // touchend 兜底：防止 click 被拦截
+        cloudMark.addEventListener('touchend', function (e) {
+          if (dragState && dragState.moved) return;
+          e.preventDefault();
+          var isTimeline = document.body.classList.contains('timeline-mode');
+          showView(isTimeline ? 'tree' : 'timeline');
+        }, { passive: false });
         floatingSwitch.addEventListener('pointerleave', function () {
           if (dragState) return;
           setSwitchOpen(false);
