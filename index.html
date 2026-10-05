@@ -2940,13 +2940,14 @@ var PLANT_IMGS = {
           'body.tree-mode .floating-switch .cloud-mark{background-size:70px 48px!important;background-position:center!important;background-repeat:no-repeat!important;}' +
           'body.tree-mode .floating-switch .cloud-mark::before{inset:13px 20px!important;}' +
           'body.tree-mode .floating-switch .cloud-mark::after{inset:4px 6px!important;}' +
-          'body.timeline-mode{position:relative!important;inset:auto!important;overflow-y:auto!important;overflow-x:hidden!important;}' +
+          'html{overflow-y:auto!important;}' +
+          'body.timeline-mode{position:static!important;inset:auto!important;overflow:visible!important;}' +
           'body.timeline-mode .timeline-flower-art,body.timeline-mode .timeline-garden-scroll{display:none!important;}' +
           'body.timeline-mode .app,body.timeline-mode .frame,body.timeline-mode #timeline-view{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .year-directory{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .timeline-shell.year-index-shell,body.timeline-mode .year-index-shell{height:auto!important;min-height:100vh!important;overflow:visible!important;}' +
-          'body.timeline-mode .plant-column{position:fixed!important;left:36px!important;top:50%!important;transform:translateY(-50%)!important;width:170px!important;display:flex!important;flex-direction:column!important;gap:24px!important;z-index:1!important;pointer-events:none!important;max-height:96vh!important;overflow:visible!important;}' +
-          'body.timeline-mode .plant-column-item{width:100%!important;height:auto!important;max-height:18vh!important;object-fit:contain!important;display:block!important;background:transparent!important;border:0!important;}';
+          'body.timeline-mode .plant-column{position:absolute!important;left:36px!important;top:80px!important;width:280px!important;display:flex!important;flex-direction:column!important;gap:80px!important;z-index:1!important;pointer-events:none!important;}' +
+          'body.timeline-mode .plant-column-item{width:100%!important;height:auto!important;display:block!important;background:transparent!important;border:0!important;}';
         document.head.appendChild(growthEditStyle);
       }
 
