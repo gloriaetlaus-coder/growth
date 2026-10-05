@@ -2627,22 +2627,8 @@ var PLANT_IMGS = {
         }, true);
         cloudMark.addEventListener('click', function () {
           if (suppressSwitchClick) return;
-          // 触屏设备：点一下直接切换视图，不用展开菜单
-          var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
-          if (isTouch) {
-            var isTimeline = document.body.classList.contains('timeline-mode');
-            showView(isTimeline ? 'tree' : 'timeline');
-            return;
-          }
           setSwitchOpen(!floatingSwitch.classList.contains('is-open'));
         });
-        // touchend 兜底：防止 click 被拦截
-        cloudMark.addEventListener('touchend', function (e) {
-          if (dragState && dragState.moved) return;
-          e.preventDefault();
-          var isTimeline = document.body.classList.contains('timeline-mode');
-          showView(isTimeline ? 'tree' : 'timeline');
-        }, { passive: false });
         floatingSwitch.addEventListener('pointerleave', function () {
           if (dragState) return;
           setSwitchOpen(false);
@@ -2903,6 +2889,9 @@ var PLANT_IMGS = {
           'body.timeline-mode .plant-column{display:none!important;}' +
           'body.tree-mode .tree-image{width:100%!important;max-width:100vw!important;height:auto!important;}' +
           'body.tree-mode .tree-portrait{width:100%!important;max-width:100vw!important;}' +
+          '#mobile-nav{display:none;}' +
+          '@media (max-width: 768px){#mobile-nav{display:flex!important;position:fixed!important;bottom:20px!important;left:50%!important;transform:translateX(-50%)!important;gap:12px!important;z-index:10000!important;}' +
+          '@media (max-width: 768px){#mobile-nav button{background:rgba(20,40,30,0.9)!important;color:#fff!important;border:1px solid rgba(255,255,255,0.3)!important;border-radius:20px!important;padding:12px 24px!important;font-size:16px!important;}' +
           '}' +
            +
           '/* 时间线强制墨绿 */' +
@@ -2970,6 +2959,24 @@ var PLANT_IMGS = {
           'body.timeline-mode .year-age { color: var(--timeline-gold); text-shadow: none; } ';
         document.head.appendChild(growthEditStyle);
       }
+
+
+      /* ============ 移动端简单切换按钮 ============ */
+      (function () {
+        if (!('ontouchstart' in window) && !(navigator.maxTouchPoints > 0)) return;
+        var nav = document.createElement('div');
+        nav.id = 'mobile-nav';
+        nav.innerHTML = '<button data-view="tree">树</button><button data-view="timeline">时间线</button>';
+        document.body.appendChild(nav);
+        var btns = nav.querySelectorAll('button');
+        for (var i = 0; i < btns.length; i++) {
+          (function (btn) {
+            btn.addEventListener('click', function () {
+              showView(btn.getAttribute('data-view'));
+            });
+          })(btns[i]);
+        }
+      })();
 
       function commitOnEnter(input, fn) {
         input.addEventListener('keydown', function (e) {
