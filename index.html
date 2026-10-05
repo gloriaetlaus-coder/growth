@@ -2627,8 +2627,9 @@ var PLANT_IMGS = {
         }, true);
         cloudMark.addEventListener('click', function () {
           if (suppressSwitchClick) return;
-          // 移动端：点一下直接切换视图，不用展开菜单
-          if (coarsePointer) {
+          // 触屏设备：点一下直接切换视图，不用展开菜单
+          var isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+          if (isTouch) {
             var isTimeline = document.body.classList.contains('timeline-mode');
             showView(isTimeline ? 'tree' : 'timeline');
             return;
