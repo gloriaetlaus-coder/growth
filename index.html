@@ -2489,6 +2489,7 @@ var PLANT_IMGS = {
         document.body.classList.toggle('tree-mode', name === 'tree');
         document.body.classList.toggle('timeline-mode', name === 'timeline');
         document.documentElement.classList.toggle('timeline-mode', name === 'timeline');
+        try{localStorage.setItem('growth-view', name);}catch(e){}
         buildPlantColumn();
         var cm = document.getElementById('cloud-mark');
         if (cm) cm.setAttribute('aria-label', name === 'timeline' ? '可拖动的月亮页面切换器' : '可拖动的太阳页面切换器');
@@ -2504,6 +2505,12 @@ var PLANT_IMGS = {
         });
         window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
       }
+
+      // 页面加载时恢复上次的视图
+      try{
+        var _saved = localStorage.getItem('growth-view');
+        if(_saved === 'timeline'){ showView('timeline'); }
+      }catch(e){}
 
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
@@ -2884,10 +2891,12 @@ var PLANT_IMGS = {
           'body.timeline-mode .app,body.timeline-mode .frame,body.timeline-mode #timeline-view{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .year-directory{overflow:visible!important;height:auto!important;max-height:none!important;}' +
           'body.timeline-mode .timeline-shell.year-index-shell,body.timeline-mode .year-index-shell{height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;display:block!important;}' +
-          'body.timeline-mode .plant-column{position:absolute!important;left:36px!important;top:80px!important;width:320px!important;display:flex!important;flex-direction:column!important;gap:80px!important;z-index:1!important;pointer-events:none!important;}' +
+          'body.timeline-mode .plant-column{position:absolute!important;left:112px!important;top:80px!important;width:320px!important;display:flex!important;flex-direction:column!important;gap:80px!important;z-index:1!important;pointer-events:none!important;}' +
           'body.timeline-mode .plant-column-item{width:100%!important;height:auto!important;display:block!important;background:transparent!important;border:0!important;}' +
+          'body.timeline-mode .plant-column-item:nth-child(1){transform:scale(1.15)!important;transform-origin:center top!important;}' +
           'body.timeline-mode .plant-column{gap:30px!important;}' +
-          'body.timeline-mode .plant-column-item:nth-child(2){margin-left:45px!important;}' +
+          'body.timeline-mode .plant-column-item:nth-child(2){margin-left:45px!important;margin-top:-38px!important;}' +
+          'body.timeline-mode .plant-column-item:nth-child(3){margin-top:-38px!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-left:-15px!important;}' +
           '/* 年份和岁数水平对齐 */' +
           'body.timeline-mode .year-item{display:flex!important;align-items:center!important;}' +
