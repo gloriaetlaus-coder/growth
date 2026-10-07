@@ -2521,13 +2521,19 @@ var PLANT_IMGS = {
       var _birdTries = 0;
       var _birdTimer = setInterval(function(){
         _birdTries++;
+        var col = document.getElementById('plant-column');
         var plum = document.querySelector('.plant-column-item:nth-child(3)');
-        if(plum && !plum.querySelector('.chongming-on-plum')){
+        if(col && plum && !col.querySelector('.chongming-on-plum')){
           var bird = document.createElement('img');
           bird.className = 'chongming-on-plum';
           bird.src = IMAGES['chongming_bird'];
           bird.alt = '';
-          plum.appendChild(bird);
+          // 定位到梅花上方
+          var colRect = col.getBoundingClientRect();
+          var plumRect = plum.getBoundingClientRect();
+          bird.style.left = (plumRect.left - colRect.left + plumRect.width/2 - 60) + 'px';
+          bird.style.top = (plumRect.top - colRect.top - 50) + 'px';
+          col.appendChild(bird);
           clearInterval(_birdTimer);
         } else if(_birdTries > 20){
           clearInterval(_birdTimer);
@@ -2921,7 +2927,7 @@ var PLANT_IMGS = {
           'body.timeline-mode .plant-column-item:nth-child(2){margin-left:45px!important;margin-top:114px!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-top:76px!important;transform:scale(1.2)!important;transform-origin:center bottom!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){position:relative!important;}' +
-          '.chongming-on-plum{position:absolute!important;top:-40px!important;left:50%!important;transform:translateX(-50%)!important;width:120px!important;pointer-events:none!important;z-index:5!important;}' +
+          '.chongming-on-plum{position:absolute!important;width:120px!important;pointer-events:none!important;z-index:5!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-left:-15px!important;}' +
           '/* 年份和岁数水平对齐 */' +
           'body.timeline-mode .year-item{display:flex!important;align-items:center!important;}' +
