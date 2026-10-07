@@ -2531,7 +2531,7 @@ var PLANT_IMGS = {
           // 定位到梅花上方
           var colRect = col.getBoundingClientRect();
           var plumRect = plum.getBoundingClientRect();
-          bird.style.left = (plumRect.left - colRect.left + plumRect.width/2 - 60) + 'px';
+          bird.style.left = (plumRect.left - colRect.left + plumRect.width/2 - 175) + 'px';
           bird.style.top = (plumRect.top - colRect.top - 20) + 'px';
           col.appendChild(bird);
           clearInterval(_birdTimer);
@@ -2927,7 +2927,7 @@ var PLANT_IMGS = {
           'body.timeline-mode .plant-column-item:nth-child(2){margin-left:45px!important;margin-top:114px!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-top:76px!important;transform:scale(1.2)!important;transform-origin:center bottom!important;}' +
           'body.timeline-mode .plant-column-item:nth-child(3){position:relative!important;}' +
-          '.chongming-on-plum{position:absolute!important;width:180px!important;pointer-events:none!important;z-index:5!important;}' +
+          '.chongming-on-plum{position:absolute!important;width:350px!important;pointer-events:none!important;z-index:5!important;animation:birdFloat 4s ease-in-out infinite!important;} @keyframes birdFloat{0%,100%{transform:translateY(0) rotate(-2deg);}50%{transform:translateY(-12px) rotate(2deg);}}' +
           'body.timeline-mode .plant-column-item:nth-child(3){margin-left:-15px!important;}' +
           '/* 年份和岁数水平对齐 */' +
           'body.timeline-mode .year-item{display:flex!important;align-items:center!important;}' +
