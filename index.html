@@ -2517,6 +2517,8 @@ var PLANT_IMGS = {
         var el = document.getElementById(id);
         if(el && el.parentNode){ el.parentNode.removeChild(el); }
       });
+      // 在梅花树上放重明鸟（已禁用，用户说像纸片）
+      /* DISABLED
       // 在梅花树上放重明鸟（轮询等植物渲染完）
       var _birdTries = 0;
       var _birdTimer = setInterval(function(){
@@ -2539,6 +2541,7 @@ var PLANT_IMGS = {
           clearInterval(_birdTimer);
         }
       }, 500);
+      */
       // 梅花土底对齐1996行底端 - 已禁用自动对齐，改用手动定位
 
       tabs.forEach(function (tab) {
