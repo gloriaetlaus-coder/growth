@@ -2894,6 +2894,9 @@ var PLANT_IMGS = {
           'body.timeline-mode .year-detail{display:flex!important;align-items:center!important;}' +
           '/* 禁用悬浮球菜单项，只留太阳/月亮直接切换 */' +
           '.floating-switch .tab{display:none!important;}' +
+          '/* 禁止悬停展开菜单 */' +
+          '.floating-switch .tabs:hover,.floating-switch:hover .tabs,.floating-switch.is-open .tabs{width:70px!important;}' +
+          '.floating-switch .tabs{transition:none!important;}' +
           '/* 底部也强制墨绿，去掉浅色条 */' +
           'html.timeline-mode,html.timeline-mode body,body.timeline-mode{background:#15241d!important;}' +
           'body.timeline-mode .app,body.timeline-mode .frame{background:transparent!important;}' +
