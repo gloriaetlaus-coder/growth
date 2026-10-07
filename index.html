@@ -2516,23 +2516,7 @@ var PLANT_IMGS = {
         var el = document.getElementById(id);
         if(el && el.parentNode){ el.parentNode.removeChild(el); }
       });
-      // 梅花土底对齐1996行底端
-      function alignPlumTo1996(){
-        var plum = document.querySelector('.plant-column-item:nth-child(3)');
-        var row1996 = document.querySelector('.year-item[data-year="1996"]');
-        var col = document.getElementById('plant-column');
-        if(!plum || !row1996 || !col) return;
-        var plumRect = plum.getBoundingClientRect();
-        var rowRect = row1996.getBoundingClientRect();
-        var colRect = col.getBoundingClientRect();
-        // 计算需要移动的距离
-        var delta = (rowRect.bottom) - (plumRect.bottom);
-        var currentTop = parseFloat(col.style.top) || 80;
-        // 用 transform 微调，不影响布局
-        col.style.transform = 'translateY(' + delta + 'px)';
-      }
-      window.addEventListener('load', function(){ setTimeout(alignPlumTo1996, 500); });
-      window.addEventListener('resize', alignPlumTo1996);
+      // 梅花土底对齐1996行底端 - 已禁用自动对齐，改用手动定位
 
       tabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
